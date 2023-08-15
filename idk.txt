@@ -17,7 +17,7 @@ so problems I currently face
 
 - model files 
 --- i find its very easy to forget what a model is for, how data should be processed before being fed through the model, or what data the model was trained on 
-
+----- exporting ..... honestly it needs its own copilot lol 
 
 - training loops 
 --- i find myself writing the same boiler plate code 
