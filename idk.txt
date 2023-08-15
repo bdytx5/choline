@@ -1,5 +1,5 @@
 yeah so basically the purpose of the this project is to eliminate some of the headaches in ML workflows and codebases 
-everytime i venture into a developer tools project, I slowly realise most the "problems" have existing solutions, I just wasn't willing to look hard enough 
+everytime i venture into a developer tools project, I slowly realize most the "problems" have existing solutions, I just wasn't willing to look hard enough 
 so the purpose of this project is to build things, and to learn i guess. i think discovery is about trying new things that usually amount to nothing. 
 
 
