@@ -1,0 +1,4 @@
+# 🍳🍳🍳choline🍳🍳🍳
+we must simplify 
+
+
