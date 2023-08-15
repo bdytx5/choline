@@ -1,0 +1,57 @@
+yeah so basically the purpose of the this project is to eliminate some of the headaches in ML workflows and codebases 
+everytime i venture into a developer tools project, I slowly realise most the "problems" have existing solutions, I just wasn't willing to look hard enough 
+so the purpose of this project is to build things, and to learn i guess. i think discovery is about trying new things that usually amount to nothing. 
+
+
+so problems I currently face 
+
+
+- cheap GPU's are available at an hourly rate, but actually deploying my models or training on these GPU's is quite burdensome
+----- sometimes p2p machines fail and the run must be restarted 
+----- moving datasets / models / code / dependencies across machines is time consuming and annoying  
+----- actually using the same GPU multiple times after a shutoff is very unlikely, so being able to schedule the startup and data sync with a p2p machine would be nice 
+
+
+---- my first idea, is that it should be as simply as running 'choline tr.py --4x3090' and it will run automatically without having to know anything else. logs/models will be sent back to your local system. the only way you should be able to tell its running in the cloud is that your computer still has its vram available ;) 
+
+
+- model files 
+--- i find its very easy to forget what a model is for, how data should be processed before being fed through the model, or what data the model was trained on 
+
+
+- training loops 
+--- i find myself writing the same boiler plate code 
+
+
+experiment logging / tracking / merging 
+
+--- wandb is a pretty good solution, but still merging multiple experiments automatically has not been solved. they have their own product lineup which i respect
+-----> however, i dont feel they solve my p2p GPU training issue sufficiently. 
+-----> eg one experiment has a harware failure, and i want to pick back up where I left off. This is doable, but requires lots of manual work to merge, and sometimes it happens in the midel of the night, so I just lost n hours of GPU time, lost dev time due to waiting on an experiment, and i still have to set up a new machine 
+
+
+
+model tuning / selection 
+
+----> im pretty sure GPT-4 could look at a condensed version of a failing ML training pipeline/logs, and usually fix most issues. 
+--------> this could save lots of money and time. but yeah Im not sure building the 'chatgpt for xyz' is really a great strategy at this point. massive respect to dedicated ai researchers 
+
+----> also just finding the right model for my dataset is quite ambiguous, and you always wonder 'what if I tried x model?' - i like diving into the research, but I dont feel this is something that should be necessary
+
+
+
+communicating with GPT 
+
+---> giving GPT-4 the information it needs is time consuming and tedious. Takes quite a bit of time. again, not sure if building a 'copilot for ML' is the best idea 
+
+
+
+deploying simple ML API's 
+
+----> i have worked with google cloud run, aws lambda, banana dev, and a few others. they all seem to have their own set of bugs / confusions. its mindblowing that this isnt easier / more seamless. maybe I've just had bad luck? 
+
+
+
+
+
+ 

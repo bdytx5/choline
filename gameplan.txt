@@ -1,0 +1,100 @@
+so it seems like the most pressing issue is cheap GPU's with seamless usability. 
+
+
+I would like to piggy back off of vast.ai, but they might sue me or just shut my account off. 
+
+
+needing money for computers is a good reason to need money i suppose. looks like i would just need to build out a server system in some 3rd world country with cheap electricity. seems doable. 
+
+
+
+perhaps an MVP that allows the individual to get more out of vast could be interesting. after all, thats mainly the issue i am facing. especially since i already solved the scaling issue by just getting a gpu  warehouse in thailand? ehh thailand actually may be too hot for cooling lol. maybe russia? relax its a joke 
+
+
+ok, so choline V1 
+--> should be able to run 'choline tr.py --4x3090' and it will set up my env on a vast machine and start syncing my data and train. 
+
+
+----> for right now, we will just sync all the data in the projects root directory ? 
+
+
+-----> datasets are typically stored in their own location on the system. i dont like asking developers to 'put x file here at location y' - its just annoying
+
+
+----> I suppose the python files could be parsed and it could look for various pathes etc etc 
+
+
+
+----> or we could sacrifice more verbosity to ---> choline tr.py --gpu=4x3090 --dirs=['~/Desktop/proj1/','~/datasets/mnist'] 
+
+
+----> still the issue remains of paths in the code.... ah got to love paths 
+
+---------> ill sleep on it .... 
+
+---> i could do a choline.txt or something, but again, choline is supposed to be sexy. config files arent that sexy imo. bash commands kinda have that magic to them 
+
+
+----> haha ive never actually tried vast's command line interface, i assume it allows me to do what im looking to do? am i supposed to just know these things? 
+
+
+---- im getting tired of talking inside my own skull, time to hand this off to a pro (gpt4) --> 
+
+
+
+It sounds like you have identified a host of pain points in ML workflows, and you're keen on addressing them in a new project, "choline". Let's break down the challenges you highlighted and provide feedback:
+
+### 1. **GPU Utilization and p2p Machines**:
+   - **P2P Failures**: Indeed, handling machine failures gracefully, especially during a long training run, can be invaluable.
+   - **Data & Code Movement**: This can be a real pain, especially if datasets are huge. Incremental syncs and caching mechanisms could help here.
+   - **Scheduling and Data Sync**: Scheduled spin-ups of virtual machines or instances based on when the resources are needed can be a huge advantage.
+
+### 2. **Model Metadata**:
+   - Storing model metadata (training data details, preprocessing steps, hyperparameters, etc.) alongside the model can be invaluable. This is something many ML practitioners do manually, but automating this or building it into a tool would be great.
+
+### 3. **Boilerplate Code for Training Loops**:
+   - There are libraries like PyTorch Lightning and FastAI that aim to reduce boilerplate, but there's room for more tools in this space.
+
+### 4. **Experiment Logging/Tracking/Merging**:
+   - Resuming failed experiments is a complex problem but can save costs and time. This involves not only tracking the current state but also ensuring the training can be resumed without significant overhead.
+
+### 5. **Model Tuning/Selection**:
+   - Automated ML (AutoML) has gained traction to solve this issue. However, integrating GPT-4 for pipeline debugging is innovative. But be wary of the complexity and potential pitfalls.
+
+### 6. **Interacting with GPT-4**:
+   - Making the process more seamless is an opportunity. The AI's interpretation of user queries and its generation of answers can be improved with more context or structure.
+
+### 7. **Deploying ML APIs**:
+   - Many face issues with serverless deployments, especially for ML workloads, given the limitations of cold starts, memory, and execution time. Simplifying this process can be a significant win.
+
+### 8. **Choline v1**:
+   - **Syncing Data**: Maybe you could look for common data structures or libraries in the code (like `torch.utils.data.DataLoader` in PyTorch) to guess where data might be coming from.
+   - **Config vs. Commands**: Both have their place. Commands are great for things that change often. Configs are good for setup that's done once and seldom changed.
+   - **Paths**: This is always tricky. Maybe "choline" could intercept file system calls to figure out which paths are being accessed during a run?
+
+### Feedback:
+
+1. **Clear Scope**: Clearly defining the primary problem "choline" aims to solve in its first version is essential. Spreading too thin might dilute the effectiveness of the solution.
+
+2. **Usability**: Ensure the solution is user-friendly. Developers and ML practitioners value tools that are easy to integrate into existing workflows.
+
+3. **Interoperability**: Ensure "choline" can play nicely with existing tools. This will enhance adoption.
+
+4. **MVP Approach**: Start with a minimal viable product. Get feedback, iterate, and enhance. Tackling too much at the outset can be overwhelming and delay feedback loops.
+
+5. **Test & Iterate**: Ensure you're validating your assumptions at each step. Sometimes what we perceive as a pain point might not be seen the same way by others.
+
+6. **Stay Updated**: The ML world evolves rapidly. Stay updated to ensure your solutions are still relevant.
+
+7. **Monetization and Costs**: Since you're considering cloud deployments and GPUs, costs can balloon quickly. Plan a monetization strategy or ways to optimize costs early on.
+
+It's an ambitious project, but with a clear direction and iterative approach, it has the potential to alleviate many pain points faced by ML practitioners. Best of luck with "choline"!
+
+
+
+
+
+
+
+
+
