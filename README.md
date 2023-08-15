@@ -7,6 +7,7 @@ we must simplify
 
 choline.pro
 
+<insert motivational quote about startups that won't actually help>  
 
 best to read txt's in order of [idk, gameplan, envstuff] 
 
