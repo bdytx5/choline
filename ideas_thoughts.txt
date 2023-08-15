@@ -1,0 +1,15 @@
+Ideas / thoughts 
+
+8/15 
+- theres lots of datasets out there. My guess if every researcher / ML engineer could quickly leverage all datasets, they could benefit from pretraining 
+-----> currently, it requires lots of manual work to adapt the datasets to be able to do this, as well as lots of hassle managing models 
+
+- also, is there some unified source of all the text in the world? Eg, sort of like the OpenAI API, but instead returning a response to your prompt, it jus
+funtions sort of as a firehose of data? not sure about the costs that would be required to run an api like this? 
+
+- before all the LLM madness began to occur, i dreamed of a GUI for building ML pipelines. I figured if each component followed a speciified schema,
+other peoples modules could be leveraged to speed up the process of building models. Now it seems as if an ML agent could take the place of 
+adapting different code blocks to work with each other, to train models faster. 
+
+
+
