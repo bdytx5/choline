@@ -50,7 +50,8 @@ deploying simple ML API's
 ----> i have worked with google cloud run, aws lambda, banana dev, and a few others. they all seem to have their own set of bugs / confusions. its mindblowing that this isnt easier / more seamless. maybe I've just had bad luck? 
 
 
+"Agent ML"
 
-
+- I feel a GPT has the capactity to just go out and try different model architectures, solve bugs, modify data-pipelines, keep an eye out on loss metrics, and terminate experiments early if there is an issue (ASSUMING CONTEXT AND CLEAR GOALS ARE ESTABLISHED). The failsafes / hallunications seem to be the main challenges for agents. 
 
  
