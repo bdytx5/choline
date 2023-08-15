@@ -1,4 +1,7 @@
 # 🍳🍳🍳choline🍳🍳🍳
+
+The cheapest and easiest way to do ML in the cloud 
+
 we must simplify 
 
 
