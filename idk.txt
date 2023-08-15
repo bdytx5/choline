@@ -27,8 +27,7 @@ experiment logging / tracking / merging
 
 --- wandb is a pretty good solution, but still merging multiple experiments automatically has not been solved. they have their own product lineup which i respect
 -----> however, i dont feel they solve my p2p GPU training issue sufficiently. 
------> eg one experiment has a harware failure, and i want to pick back up where I left off. This is doable, but requires lots of manual work to merge, and sometimes it happens in the midel of the night, so I just lost n hours of GPU time, lost dev time due to waiting on an experiment, and i still have to set up a new machine 
-
+-----> eg one experiment has a harware failure, and i want to pick back up where I left off. This is doable, but requires lots of manual work to merge, and sometimes it happens in the middle of the night, so I just lost n hours of GPU time, lost dev time due to waiting on an experiment, and i still have to set up a new machine the next morning 
 
 
 model tuning / selection 
