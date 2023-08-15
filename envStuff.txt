@@ -1,0 +1,41 @@
+so the user local env needs to be recreated on a server 
+
+i personally have never got into using docker. I understand pip and linux, and my guess is most devs / researchers do too. i admire the simplicity of requirements.txt . and they are saying config files arent sexy?!?! -- idk, I guess the simplicity of the requirments.txt in comparison to a dockerfile is whats attractive? 
+
+
+
+my initial thought is the system / env info could be fetched automatically using some sort of script in the choline run command phase (haha idk if thats a thing?),
+and essentially this would be used in one of two ways .... 
+
+
+-----> AUTOMATICALLY create a docker env FOR the user and deploy automatically 
+
+
+-----> compile the users env and just ship the binary to a server with similar specs as the users machine 
+
+
+
+-----> (yuky) allow the user to make their own dockerfile / custom choline config 
+
+
+
+
+both of these probably have their own set of issues. im a container n00b i guess. the goal is to always be a n00b, just be less of a n00b 
+
+
+its these sorts of projects where i really see the gaps in my own knowledge. its one thing to know something is probably feasible, but to actually know for sure is another 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
