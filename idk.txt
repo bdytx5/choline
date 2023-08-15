@@ -12,7 +12,7 @@ so problems I currently face
 ----- actually using the same GPU multiple times after a shutoff is very unlikely, so being able to schedule the startup and data sync with a p2p machine would be nice 
 
 
----- my first idea, is that it should be as simply as running 'choline tr.py --4x3090' and it will run automatically without having to know anything else. logs/models will be sent back to your local system. the only way you should be able to tell its running in the cloud is that your computer still has its vram available ;) 
+---- my first idea, is that it should be as simple as running 'choline tr.py --4x3090' and it will run automatically without having to know anything else. logs/models will be sent back to your local system. the only way you should be able to tell its running in the cloud is that your computer still has its vram available ;) 
 
 
 - model files 
