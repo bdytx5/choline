@@ -32,3 +32,9 @@ ive been forgetting a lot about previous scripts ive written...
 - lots of times, certain libraries will just not work. I ususally do the prompting to get it to use a different library. then later, while 
 doing a similar task, it goes back to using the original problem causing lib. 2 solutions come to mind, intelligent prompt suggestion based off previous issues, or just being able to quickly search over ALL my past code. at this rate, using github would take up so much of my time (im moving so much faster now) --- that makes me think, perhabs we need an Agent that can automatically back things up on github. prob disable --force lol. 
 
+
+- being able to change things like lr, activation functions, optimizer, # epochs mid run without having to completely start over and change the 
+pretrained model to the most recent one would be awesome 
+
+
+
