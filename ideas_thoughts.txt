@@ -25,3 +25,10 @@ I like the idea of using chatGPT convos as a sort of "unsupervised" form of docu
 likely will have strong relevance once ive forgot all about what i was working on. The biggest thing ive been noticing is that as chatgpt 
 has allowed me to do way more coding, ive got all this code that i didnt really personally write myself, and there is way more now, so 
 ive been forgetting a lot about previous scripts ive written... 
+
+
+
+
+- lots of times, certain libraries will just not work. I ususally do the prompting to get it to use a different library. then later, while 
+doing a similar task, it goes back to using the original problem causing lib. 2 solutions come to mind, intelligent prompt suggestion based off previous issues, or just being able to quickly search over ALL my past code. at this rate, using github would take up so much of my time (im moving so much faster now) --- that makes me think, perhabs we need an Agent that can automatically back things up on github. prob disable --force lol. 
+
