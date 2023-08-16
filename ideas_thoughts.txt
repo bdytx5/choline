@@ -12,4 +12,10 @@ other peoples modules could be leveraged to speed up the process of building mod
 adapting different code blocks to work with each other, to train models faster. 
 
 
+8/16 
 
+- sometimes there are outliers in the dataset. It would be cool if the DL framework would keep track of samples that tend to lead to strange properties / changes in activations/losses 
+
+- sometimes when doing "research" i kinda just want to automate the process of running an experiment with different parameters or datasets
+and do this all in parralel. it would be cool just to say "do this experiment with theses xyz changes, and it something goes wrong, try to fix it -> 
+and the agent would try its best to carry out the experiements, and maybe even bring the researcher in the loop to debug. 
