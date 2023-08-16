@@ -4,10 +4,21 @@ The cheapest and easiest way to do ML in the cloud
 
 we must simplify 
 
+If u have ideas, feel free to make pull requests. 
+
+my email is byyoung3@gmail.com if u want to chat
+
 
 choline.pro
 
 <insert motivational quote about startups that won't actually help>  
+
+
+Currently, the main goal is to automate a lot of the processes of training models, as well as ease the process of using p2p GPU's on vast.ai 
+The plan may change, but currently this project is focused of building a simple wrapper around Torch, and building a backend that can utilize 
+this wrapper to automate training on vast.ai, as well as make improvements on top of the exisitng Torch library. 
+
+
 
 best to read txt's in order of [idk, gameplan, envstuff] 
 
