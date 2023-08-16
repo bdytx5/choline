@@ -19,3 +19,9 @@ adapting different code blocks to work with each other, to train models faster.
 - sometimes when doing "research" i kinda just want to automate the process of running an experiment with different parameters or datasets
 and do this all in parralel. it would be cool just to say "do this experiment with theses xyz changes, and it something goes wrong, try to fix it -> 
 and the agent would try its best to carry out the experiements, and maybe even bring the researcher in the loop to debug. 
+
+- also when doing experirments, it would be cool if i could link my chatgpt conversations that helped me build these different experiemtns.
+I like the idea of using chatGPT convos as a sort of "unsupervised" form of documentation. The question say a lot about what im doing, and 
+likely will have strong relevance once ive forgot all about what i was working on. The biggest thing ive been noticing is that as chatgpt 
+has allowed me to do way more coding, ive got all this code that i didnt really personally write myself, and there is way more now, so 
+ive been forgetting a lot about previous scripts ive written... 
