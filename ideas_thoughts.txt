@@ -38,3 +38,23 @@ pretrained model to the most recent one would be awesome
 
 
 
+
+
+
+8/17 
+
+im starting to think i might have sufficient ideas to make something useful and worth building. 
+however, i want to focus on making the highest utility thing for the most amount of people 
+eg, i want to grow as fast as possible while also being as useful as possible (i think they are the same thing usually) 
+So decisions made around what actually gets built will be viewed through this lense first and foremost 
+
+
+
+
+
+
+
+
+
+
+
