@@ -23,7 +23,7 @@ this wrapper to automate training on vast.ai, as well as make improvements on to
 best to read txt's in order of [idk, gameplan, envstuff] 
 
 t0d0 
-- ~~figure out how to use vast command line tools and make a short doc on that ~~
+- ~~figure out how to use vast command line tools and make a short doc on that~~
 - ----> https://cloud.vast.ai/cli/ (its pretty good)
 - Need to make a custom command that will rent out a GPU and set up an evironment similar to the users
 - ------> see vast folder 
