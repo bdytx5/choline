@@ -37,6 +37,7 @@ Core functions (subject to change)
 - Ability to extend epochs via front end 
 - Ability to change learning rate via front end, mid run 
 - Potentially supporting a web version of tensor board
+- potentially a web based code editor on the front end to make quick changes 
 
 t0d0 
 - ~~figure out how to use vast command line tools and make a short doc on that~~
