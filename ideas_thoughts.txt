@@ -50,6 +50,9 @@ So decisions made around what actually gets built will be viewed through this le
 
 
 
+- picking a batch size is pretty annoying. I constantly have to kinda guess based on my wandb logs etc etc. It would be cool if the dataset object would calculate this for me, starting out at 1, and then calculating max. of course in choline fashion, restarting automatically in the event of a failure. 
+When other DL frameworks crash, we get back up and run again 
+
 
 
 
