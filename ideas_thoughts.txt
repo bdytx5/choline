@@ -61,5 +61,7 @@ When other DL frameworks crash, we get back up and run again
 - trained a model without setting my seed. Now i have to retrain. I think there could sort of be a LLM check on the tr script before every run looking 
 for things like this. I guess like a model specilized for ML workflows. But again, Im not looking to get into a model iq measuring contest with Google or OpenAI etc etc 
 
+---> also circling back to my ideas around a new model strucuture, saving the training script along with the model saves the seed that the model was trained on. As an alternative, could run an LLM over the tr script and parse out critical save info. Mistakes are possible tho.... 
+
 
 
