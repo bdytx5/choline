@@ -14,11 +14,14 @@ choline.pro
 <insert motivational quote about startups that won't actually help>  
 
 
+
 Currently, the main goal is to automate a lot of the processes of training models, as well as ease the process of using p2p GPU's on vast.ai 
 The plan may change, but currently this project is focused of building a simple wrapper around Torch, and building a backend that can utilize 
 this wrapper to automate training on vast.ai, as well as make improvements on top of the exisitng Torch library. 
 
+For right now, ChatGPT is my Head Business Strategist and Head Junior Programmer. GPT-5 will be interviewing for CTO ;) 
 
+https://chat.openai.com/share/5250bfa3-3783-49ed-9b77-a71592cd3f73
 
 best to read txt's in order of [idk, gameplan, envstuff] 
 
