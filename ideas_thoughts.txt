@@ -70,6 +70,9 @@ so ive trained a few models in my day. Im no yann lecunn, but ive trained a few 
 
 The big thing im seeing is that many of these "gotchas" when it comes to training a model is not something that can be solved with a simple wrapper or framework. There needs to be an intelligent overwatch over the codebase and "runbase" -- otherwise theres just gonna be a bunch of failed runs. ML engineering is about accounting and organization. Training pipelines across different versions scale sort of like the attention mechanism -- quadratically 
 
+v1*(v2 and comarisons to v1)*(GPT speed increasing need for organization)*(utilizing and mangaging random cloud systems and managing different systems) 
+= difficult^4 
+
 
 
 
