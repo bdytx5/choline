@@ -28,7 +28,7 @@ best to read txt's in order of [idk, gameplan, envstuff]
 Core functions (subject to change) 
 - Allows for single command that uploads all data to a remote vast instance and starts the training script for you automatically 
 - If using the Choline wrapper, it will automatically store models that have been pretrained, along with your script information to a frontend 
-- Ability to pause runs and resume with via the font end 
+- Ability to pause runs and resume via the font end 
 - Automatic run restart and new instance creation as a result of failed runs 
 - Automatic shutdown of instances at the end of runs 
 - Integration with other cloud providers for easy access 
