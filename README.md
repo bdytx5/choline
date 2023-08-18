@@ -25,6 +25,19 @@ https://chat.openai.com/share/5250bfa3-3783-49ed-9b77-a71592cd3f73
 
 best to read txt's in order of [idk, gameplan, envstuff] 
 
+Core functions (subject to change) 
+- Allows for single command that uploads all data to a remote vast instance and starts the training script for you automatically 
+- If using the Choline wrapper, it will automatically store models that have been pretrained, along with your script information to a frontend 
+- Ability to pause runs and resume with via the font end 
+- Automatic run restart and new instance creation as a result of failed runs 
+- Automatic shutdown of instances at the end of runs 
+- Integration with other cloud providers for easy access 
+- AI monitoring of runs that communicates with you about possible shutdowns, and maybe even pauses if it suspects poor performance 
+- Automatic batch size selection 
+- Ability to extend epochs via front end 
+- Ability to change learning rate via front end, mid run 
+- Potentially supporting a web version of tensor board
+
 t0d0 
 - ~~figure out how to use vast command line tools and make a short doc on that~~
 - ----> https://cloud.vast.ai/cli/ (its pretty good)
