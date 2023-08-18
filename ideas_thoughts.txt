@@ -74,5 +74,8 @@ v1*(v2 and comarisons to v1)*(GPT speed increasing need for organization)*(utili
 = difficult^4 
 
 
+another challenge is working with super large models on a local system. Well actually is it?? can i put llama on my cpu??? 
+
+
 
 
