@@ -57,7 +57,9 @@ When other DL frameworks crash, we get back up and run again
 
 
 
-
+8/18 
+- trained a model without setting my seed. Now i have to retrain. I think there could sort of be a LLM check on the tr script before every run looking 
+for things like this. I guess like a model specilized for ML workflows. But again, Im not looking to get into a model iq measuring contest with Google or OpenAI etc etc 
 
 
 
