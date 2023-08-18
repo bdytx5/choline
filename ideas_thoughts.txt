@@ -65,3 +65,11 @@ for things like this. I guess like a model specilized for ML workflows. But agai
 
 
 
+
+so ive trained a few models in my day. Im no yann lecunn, but ive trained a few models. I'm not the kind of person to get tied up in details, but i can still handle them and cosider my organizational skills decent. The issue im having it's hard to know what information (no programatic) information to log about my experiment. It would be cool if every time i clicked run, a bot would ask me what ive changed, and ask about specific changes it sees in the code. 
+
+The big thing im seeing is that many of these "gotchas" when it comes to training a model is not something that can be solved with a simple wrapper or framework. There needs to be an intelligent overwatch over the codebase and "runbase" -- otherwise theres just gonna be a bunch of failed runs. ML engineering is about accounting and organization. Training pipelines across different versions scale sort of like the attention mechanism -- quadratically 
+
+
+
+
