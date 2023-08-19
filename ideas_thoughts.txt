@@ -76,6 +76,9 @@ v1*(v2 and comarisons to v1)*(GPT speed increasing need for organization)*(utili
 
 another challenge is working with super large models on a local system. Well actually is it?? can i put llama on my cpu??? 
 
-
+8/19 
+- i generally feel binaries are a unterutilized component on working with Python. If docker fails, this is a good second choice.
+---- when a run is gonna take 36 hours, is it really that big of a deal if we just compile ur code before deploying it? 
+------  the key thing here is u can do all ur debugging locally, and click deploy without doing any debugging server side. 
 
 
