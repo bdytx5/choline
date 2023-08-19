@@ -1,0 +1,7 @@
+# "the first step in solving a problem is knowing u got a problem" - 6dogs 
+
+
+
+problem -> sometimes runs will hang, whether it be at the beginning, the end, or even the middle haha 
+----------> need a way to a) detect failures and b) terminate processes 
+            and c) establish a way for the user to communicate what they want to happen when things break 
