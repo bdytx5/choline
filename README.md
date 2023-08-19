@@ -19,6 +19,9 @@ Currently, the main goal is to automate a lot of the processes of training model
 The plan may change, but currently this project is focused of building a simple wrapper around Torch, and building a backend that can utilize 
 this wrapper to automate training on vast.ai, as well as make improvements on top of the exisitng Torch library. 
 
+
+The way i see it, serverless is too restrictive, yet pure "serverful" is overkill. The goal is to make a hybrid
+
 For right now, ChatGPT is my Head Business Strategist and Head Junior Programmer. GPT-5 will be interviewing for CTO ;) 
 
 https://chat.openai.com/share/5250bfa3-3783-49ed-9b77-a71592cd3f73
