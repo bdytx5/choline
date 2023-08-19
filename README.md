@@ -25,8 +25,12 @@ https://chat.openai.com/share/5250bfa3-3783-49ed-9b77-a71592cd3f73
 
 best to read txt's in order of [idk, gameplan, envstuff] 
 
+
+
+
 Core functions (subject to change) 
-- Allows for single command that uploads all data to a remote vast instance and starts the training script for you automatically 
+- Allows for single command that uploads all data to a remote vast instance and starts the training script for you automatically
+- ability to schedule the above 
 - If using the Choline wrapper, it will automatically store models that have been pretrained, along with your script information to a frontend 
 - Ability to pause runs and resume via the font end 
 - Automatic run restart and new instance creation as a result of failed runs 
