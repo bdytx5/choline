@@ -1,6 +1,6 @@
 import subprocess
 import sys
-
+import os
 def get_local_cuda_version():
     try:
         result = subprocess.run(["nvcc", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -46,7 +46,9 @@ def get_conda_version():
     conda_version = result.stdout.decode().strip().split(" ")[-1]
     return conda_version
 
+
 def create_dockerfile(conda_version, req_list, cuda_version, python_version, working_dir="/choline"):
+    dockerfile_path = os.path.join(working_dir, 'Dockerfile')
     dockerfile_lines = [
         f"FROM conda/miniconda3-cuda{cuda_version}-cudnn8-runtime:{conda_version}",
         f"ENV PYTHON_VERSION={python_version}",
@@ -55,22 +57,23 @@ def create_dockerfile(conda_version, req_list, cuda_version, python_version, wor
         "RUN conda install -y pip",
     ] + [f"RUN pip install {req}" for req in req_list]
 
-    with open('Dockerfile', 'w') as file:
+    with open(dockerfile_path, 'w') as file:
         file.write('\n'.join(dockerfile_lines))
 
     print(f"Dockerfile created with Conda {conda_version}, CUDA {cuda_version}, Python {python_version}, and requirements from current environment.")
+    return dockerfile_path
 
-# Retrieve local CUDA version
-local_cuda_version = get_local_cuda_version()
 
-# Retrieve local Python version
-local_python_version = get_python_version()
+def create_docker_file_from_env():
+    local_cuda_version = get_local_cuda_version()
+    local_python_version = get_python_version()
+    req_list = get_requirements_list()
+    conda_version = get_conda_version()
+    working_dir = os.getcwd()  # Gets the current working directory
 
-# Retrieve requirements list from the current environment
-req_list = get_requirements_list()
+    dockerfile_path = create_dockerfile(conda_version, req_list, local_cuda_version, local_python_version, working_dir)
+    return dockerfile_path
 
-# Retrieve local Conda version
-conda_version = get_conda_version()
-
-# Create Dockerfile with the collected information
-create_dockerfile(conda_version, req_list, local_cuda_version, local_python_version)
+# Example usage
+# dockerfile_path = create_docker_file_from_env()
+# print(f"Dockerfile path: {dockerfile_path}")
