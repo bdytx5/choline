@@ -82,3 +82,13 @@ another challenge is working with super large models on a local system. Well act
 ------  the key thing here is u can do all ur debugging locally, and click deploy without doing any debugging server side. 
 
 
+
+strange thought, but i feel the hierarchical structure of file systems are a bit annoying
+something worth investigating is sort of a spatial UI layout of files, and they would be clustered by function
+also could add the ability to sort files by creation date etc, regardless of the folder they are in. 
+
+
+
+
+
+
