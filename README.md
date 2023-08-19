@@ -47,14 +47,21 @@ Core functions (subject to change)
 - potentially a web based code editor on the front end to make quick changes 
 
 t0d0 
+CLIENT -- Need to make a custom command that will rent out a GPU and set up an evironment similar to the users
 - ~~figure out how to use vast command line tools and make a short doc on that~~
 - ----> https://cloud.vast.ai/cli/ (its pretty good)
-- Need to make a custom command that will rent out a GPU and set up an evironment similar to the users
 - ------> see vast folder 
-- figure out how to create a docker container reliably from a script that runs on the users local machine
-- build machine provisioner that finds a machine for the user and starts it up - i guess use vast.ai 
+- ~~figure out how to create a docker container reliably from a script that runs on the users local machine~~
+- ~~build machine provisioner that finds a machine for the user and starts it up (also sending docker info)~~ - i guess use vast.ai - (need to test)
+- build flask api client call that requests storage, and then sends relevant files 
+
+BACKEND -- Need a backend that can handle temporary storage of a users data 
+- build flask backend that can recieve requests and provision storage locations and startup a listener that will transfer files to the GPU VM async 
 - build server functionality that automatically syncs models to some other location in between epochs
 - build fail detection and rollover system that syncs progress with previous run 
+
+DEEP LEARNING LIBRARY ADDONS -- need integrations with popular deep learning frameworks to sync runs with a database 
 - build torch model wrappers (unless other solution is found) that automates model saving
 - possibly build wrapper for torch dataset that solved discussed dataset paths that reside outside of the project
 - build website, payment console, and CLI login / account infrastructure 
+

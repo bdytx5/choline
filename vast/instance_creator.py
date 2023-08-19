@@ -89,7 +89,7 @@ def create_instance(instance_id, options, size_gb):
     print(f"Instance created successfully. Upload cost for {size_gb} GB: ${upload_cost}. Download cost for {size_gb} GB: ${download_cost}.")
 
 
-
+    
 def onstart_script_path(dockerfile_path):
     script_content = f"""#!/bin/bash
 # Commands to copy the Dockerfile from the project's root directory
