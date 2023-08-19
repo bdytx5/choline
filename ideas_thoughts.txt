@@ -89,6 +89,10 @@ also could add the ability to sort files by creation date etc, regardless of the
 
 
 
+one of the big concerns around p2p systems is GPU security. As far as I know, theres no way to make this 100% secure 
+but the question is, could we make it 99.99% secure? 
+
+
 
 
 
