@@ -1,0 +1,2 @@
+would it be a good idea to use github as a backend similar to how banana dev uses it? I'm worried 
+it would add extra complexity to the system, which the entire goal of this project is to simplify.
