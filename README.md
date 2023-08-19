@@ -16,8 +16,7 @@ choline.pro
 
 
 Currently, the main goal is to automate a lot of the processes of training models, as well as ease the process of using p2p GPU's on vast.ai 
-The plan may change, but currently this project is focused of building a simple wrapper around Torch, and building a backend that can utilize 
-this wrapper to automate training on vast.ai, as well as make improvements on top of the exisitng Torch library. 
+The plan may change, but currently this project is focused on building a simple wrapper around ML frameworks, and building a backend that can utilize this wrapper to automate training on vast.ai, as well as make improvements on top of the exisitng Exisiting ML libraries. 
 
 
 The way i see it, serverless is too restrictive, yet pure "serverful" is overkill. The goal is to make a hybrid
@@ -65,3 +64,5 @@ DEEP LEARNING LIBRARY ADDONS -- need integrations with popular deep learning fra
 - possibly build wrapper for torch dataset that solved discussed dataset paths that reside outside of the project
 - build website, payment console, and CLI login / account infrastructure 
 
+FRONTEND - allows for monitoring different runs
+- TODO 
