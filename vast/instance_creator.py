@@ -35,11 +35,6 @@ import subprocess
 import json
 import sys
 
-def get_local_driver_version():
-    # This could be modified to actually retrieve the driver version
-    return "525.60.11"
-
-
 def convert_version_to_int(version_str):
     return int(version_str.replace('.', ''))
 
@@ -52,6 +47,19 @@ def sort_offers_by_driver_and_gpu(offers, target_gpu, target_driver_version):
     # Sort offers by how close their driver version is to the local driver version
     sorted_offers = sorted(filtered_offers, key=lambda x: abs(convert_version_to_int(x['driver_version']) - target_driver_version_int)) # Assuming 'driver_version' contains driver version
     return sorted_offers
+
+
+import subprocess
+
+def get_local_driver_version():
+    try:
+        result = subprocess.run(["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader,nounits"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result.check_returncode()
+        local_driver_version = result.stdout.decode().strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("NVIDIA driver not found on this machine. Using default version.")
+        local_driver_version = "525.60.11"
+    return local_driver_version
 
 
 def get_local_cuda_version():
