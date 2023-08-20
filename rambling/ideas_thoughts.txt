@@ -96,3 +96,7 @@ but the question is, could we make it 99.99% secure?
 
 
 
+
+
+8/20 
+- keep track of files used for val and tr can get confusing. It would be cool if it would pick a seed for you by default? This seems obvious I feel 

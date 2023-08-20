@@ -1,5 +1,7 @@
 
-
+#### listens for calls from the client, and provisions storage
+####### also recieves vast instance information 
+########### 
 from flask import Flask, request
 
 app = Flask(__name__)

@@ -14,7 +14,6 @@ def server():
             with open(uploaded_file.filename, 'wb') as file:
                 payload = uploaded_file.read()
                 print("Payload content:", payload.decode('utf-8'))  # Decode bytes to string for printing
-
             return 'File with ID "abc" uploaded successfully', 200
         return 'No file with the correct ID uploaded', 400
 
