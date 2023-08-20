@@ -45,6 +45,23 @@ Core functions (subject to change)
 - Potentially supporting a web version of tensor board
 - potentially a web based code editor on the front end to make quick changes 
 
+
+How to contribute
+
+- im in the process of figuring out how to make the wrapper work for 
+torch/tf/keras(new keras which i believe uses native tf and torch). so ideas are welcome 
+- if you have unrelated ideas, feel free to put them in rambling/ideas_thoughts.txt -- just add ur username next to the date 
+- if you are good at backend stuff, I'm working on a architecture for that... 
+--> its to manage the users files at a intermediary location to handle vast failures 
+----> basically right now its a flask server that recieves an initial call to 
+----> reserve storage somewhere (right now local host) and returns the path name 
+----> to upload the users scripts/data to, and also starts a listener at that location
+----> after that, a listener at the returned location relays the files to the vast ai instance 
+----> once it has started up 
+
+
+
+
 t0d0 
 CLIENT -- Need to make a custom command that will rent out a GPU and set up an evironment similar to the users
 - ~~figure out how to use vast command line tools and make a short doc on that~~
