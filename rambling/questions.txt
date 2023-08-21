@@ -1,2 +1,23 @@
 would it be a good idea to use github as a backend similar to how banana dev uses it? I'm worried 
+
 it would add extra complexity to the system, which the entire goal of this project is to simplify.
+
+
+as far as technical infrastructure goes, would it be good to be integrated with github? 
+
+pros 
+- we can easily version our training files, and link this to different runs. This could offer advantages for pausing/resuming runs. 
+- less storage for us 
+
+cons 
+- increased complexity for storing files 
+- increased complexity for user to need to link their git, especially if the system commits autonomously 
+
+
+
+
+
+
+
+
+

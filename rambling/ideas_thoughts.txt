@@ -108,3 +108,31 @@ but the question is, could we make it 99.99% secure?
 the files on your computer, and visualize them in a 3 dimensional space, along with conversations you've had. It would be clustered 
 by creating some embedding matrix, and possibly multiple embeddings combined. Or perhaps just retroactively feeding the model all the code you've written
 and matching it with GPT convos you have had. I would use that! Context is all u need? 
+
+
+
+8/21 
+for a lot of my projects, i use models not only in my final product, but also to process other data for labeling
+the process of running inference with the model is often unoptimized, and also sometimes requires effort to simply do the inference.
+Anymore, i just give all my code to chatgpt, and it usually is able to spit something good out. 
+so i guess this problem has mainly been solved. so preface the following with that... 
+The idea is to have a wrapper that wraps around the regular nn.module, however, it would automatically convert to onnx,tflite, or whatever format offers the best peformance. 
+another idea is that sometimes simply converting to onnx can offer 2x speedups (for fwd pass) 
+in situations when using a frozen backbone model, i wonder if perhaps there are many scenarios where the conversion could be handled under the hood, and get a 2x speedup for the user 
+just more ideas i want to get on paper, and this is probably low priority 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
