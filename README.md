@@ -20,14 +20,14 @@ THE THINGS I REALLY WANT ARE ....
 4) alerts for various events that occur on training run (accuracy accomplishments and failures), to my email 
 
 
-Currently, the main goal is to automate a lot of the processes of training models, as well as ease the process of using p2p GPU's on vast.ai 
+Currently, the main goal is to automate a lot of the processes of training models, as well as ease the process of using p2p GPU's on vast.ai.
 The plan may change, but currently this project is focused on building a simple wrapper around ML frameworks, and building a backend that can utilize this wrapper to automate training on vast.ai, as well as make improvements on top of the exisitng Exisiting ML libraries. 
 
 
 The way i see it, serverless is too restrictive, yet pure "serverful" is overkill. The goal is to make a hybrid
 
 
-Right now, I'm building out the bare bones v1 version that will run on my personal machine. If i it, then I will scale it so everyone can use it. 
+Right now, I'm building out the bare bones v1 version that will run on my personal machine. If i like it, then I will scale it so everyone can use it. 
 If you have a linux machine running 24/7, you will be able to run choline v1. 
 
 
