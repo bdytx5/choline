@@ -13,6 +13,11 @@ choline.pro
 
 <insert motivational quote about startups that won't actually help>  
 
+THE THINGS I REALLY WANT ARE .... 
+1) a cli that will let me specify when a vast instance will startup, as well as what data it will sync - without writing any sh scripts or installing any linux packages 
+2) a python library that will sync my models, and code with the vast instance, and startup and resume a training run when/if the vast instance fails (on another instance) 
+3) the library will also let me pause runs and effortlessly resume them, without any programatic code changes, as well as schedule pauses with shutdowns  
+4) alerts for various events that occur on training run (accuracy accomplishments and failures), to my email 
 
 
 Currently, the main goal is to automate a lot of the processes of training models, as well as ease the process of using p2p GPU's on vast.ai 
@@ -21,9 +26,10 @@ The plan may change, but currently this project is focused on building a simple 
 
 The way i see it, serverless is too restrictive, yet pure "serverful" is overkill. The goal is to make a hybrid
 
-For right now, ChatGPT is my Head Business Strategist and Head Junior Programmer. GPT-5 will be interviewing for CTO ;) 
 
-https://chat.openai.com/share/5250bfa3-3783-49ed-9b77-a71592cd3f73
+Right now, I'm building out the bare bones v1 version that will run on my personal machine. If i it, then I will scale it so everyone can use it. 
+If you have a linux machine running 24/7, you will be able to run choline v1. 
+
 
 best to read txt's in order of [idk, gameplan, envstuff] 
 
@@ -49,14 +55,14 @@ Core functions (subject to change)
 How to contribute
 
 - im in the process of figuring out how to make the wrapper work for 
-torch/tf/keras(new keras which i believe uses native tf and torch). so ideas are welcome 
+torch/tf/keras(new keras which i believe uses native tf and torch). so ideas are welcome - the goal is to make it ridiculously simple, yet easily exapandable for power users 
 - if you have unrelated ideas, feel free to put them in rambling/ideas_thoughts.txt -- just add ur username next to the date 
 - if you are good at backend stuff, I'm working on a architecture for that... 
 --> its to manage the users files at a intermediary location to handle vast failures 
 ----> basically right now its a flask server that recieves an initial call to 
 ----> reserve storage somewhere (right now local host) and returns the path name 
 ----> to upload the users scripts/data to, and also starts a listener at that location
-----> after that, a listener at the returned location relays the files to the vast ai instance 
+----> after that, the listener at the returned location relays the files to the vast ai instance 
 ----> once it has started up 
 
 
