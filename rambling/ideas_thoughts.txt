@@ -126,7 +126,9 @@ just more ideas i want to get on paper, and this is probably low priority
 
 
 
-
+8/22 
+- being able to schedule a run on my own local system would be nice too. im not sure what the best way to do this would be.
+ My guess probably using git to actually code what will be tested, and then you would specify what commits you want to run 
 
 
 
