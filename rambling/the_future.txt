@@ -1,0 +1,28 @@
+lets not kid ourselfs, the future of software is about software writing software 
+
+
+andrej karpathy once coined the term "Software 2.0" where instead of writing if statements,
+we train neural nets 
+
+
+im coining the term "Software Squared" or "Software^2" 
+this is software writing itself 
+
+we will have to keep a watchful eye over this expontential technology. current tools are insufficient. 
+
+github manages code, who mangages compute (money)? 
+
+will jira be effective for ai agents?
+
+how does one programmer manage 100 ai agents? 
+
+what is the role of a programmer in the software^2 era? 
+
+do we give ai agent A 1M dollars to build our system or do we go for agent B at 1.5M? 
+
+do we make our own agent or do we use someone elses? 
+
+what agent will work best for us? We dont want to fine tune on a sub-optimal agent backbone. 
+
+
+
