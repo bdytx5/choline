@@ -135,6 +135,26 @@ just more ideas i want to get on paper, and this is probably low priority
 
 
 
+8/27 
+
+have been doing some ai focused research lately. lots of work on smaller datasets like cifar and MNIST 
+ive noticed keeping track of experiments (and things ive done qualitatively) has been somewhat difficult 
+id like something with a UI that shows me a timeline of what ive done. and summarizes what ive done 
+at varying levels of granularity 
+
+a github but better haha 
+
+github is great and has been optimized for the fortune 500 
+
+theres only so much you can feature engineer that sells to every F500 
+
+is there an opening for the LLM-backed ai researcher 
+
+
+8/28 
+
+-- haha just saw this https://www.canva.dev/blog/engineering/we-put-half-a-million-files-in-one-git-repository-heres-what-we-learned/
+
 
 
 

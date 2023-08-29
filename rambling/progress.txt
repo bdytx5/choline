@@ -1,0 +1,135 @@
+so far ive made some progress building the CLI for vast reservations (local only)
+
+
+theres lots of criteria that needs to be specified for what u are willing to pay for an instance 
+
+
+
+
+
+i think a good solution would be a popup web ui where u can simply select an instance u want 
+and it will make a command that matches the criteria -- potentially allowing u to add x % premium 
+u are willing to pay on top of what its costs 
+
+so u can just run 'choline search offers' and there will be a popup 
+
+
+next, ive realized that docker does seem to add quite a bit of complexity without solving too many issues 
+
+basically for most ml workloads, there are a few important things that should match for the env 
+
+
+- cuda and cudnn version 
+- the python version 
+- requirements.txt 
+
+- os / underlying driver / libraries (i am less familar with this)
+
+
+
+docker seems to solve some of the compatibility stuff for the last one, but users 
+would need to manually create their docker image, upload it, etc etc 
+and it really just seems like a headache for many ML engineers and researchers 
+
+there is probably a way to automate this, but i will wait to do that 
+
+
+running choline shedule will automatically run the choline init command 
+
+
+choline init will .... 
+- ask for the data / code you want to send to the instance 
+- your command to run the train script 
+- create a startup script based on the information above, along with your current env 
+
+
+choline schedule --args  will allow you to schedule the startup of an instance, using the data 
+generated in the choline init directory (will ask u if its up to date before scheduling)
+
+
+"choline status" will show all scheduled startups, with corresponding git commits for each run 
+(latest commit at least )
+-> this is actually a new idea ive had. I would like to keep track of what code versions are running 
+on a machine without having to go into the machine and look... 
+----> by asscociating a commit hash with each run, i can easily manage lots of experiments easily 
+
+
+eg. of current choline CLI 
+
+###############################################################################
+$ choline search offers 
+
+---> launches web UI in browser to easily create instance filtering command 
+
+
+$ choline init 
+Add entire current working directory? (y/n): y
+Enter additional locations to upload (comma-separated). These will be available at ~/root/your_folder_or_file name once uploaded: ~/Desktop/brain
+Enter the tr command for run_cmd.sh: python tr.py
+
+
+
+$ choline schedule "gpu args and sheduled time" 
+
+-----> will read from the /choline/ dir where choline init wrote to, and will create a scheduled 
+--------> instance creation command for the specified time 
+
+----> this works by writing a schedule folder in the ~/.choline dir where the name is the scheduled time 
+---> the instance creation script reads from this dir and picks the closest time to when it runs 
+-----> 
+
+
+$ choline status 
+----------------------------------- 
+choline_id
+Status: scheduled
+Startup at 8.30 5:23AM 
+commit_hash_xyz 
+commit_message 
+instance_args 
+data_directories 
+----------------------------------- 
+choline_id
+Status: scheduled
+8.30 5:23AM commit_hash_xyz 
+commit_message 
+instance_args 
+data_directories 
+----------------------------------- 
+
+
+###############################################################################
+
+
+so these are some basic commands that will allow users to schedule vast instances 
+
+
+
+now scheduling certainly takes out a lot of the headache of using vast 
+but i think there are some potential other features that could be really helpful 
+
+
+being able to have scheduled shutdowns and easily resume, all with a simple CLI / UI 
+
+eg $ choline resume choline_id  
+   $ choline pause choline_id
+   
+
+the code would need to be setup to do this (eg model should load from checkpoint) and logging should 
+go to the same location as previously (not sure if wandb supports resuming ? )
+
+
+
+
+along with this, being able to supply args for when an instance should shut down 
+
+
+eg -> choline schedule "args" "shutdown if val does not increase after 50 continuos epochs " 
+
+
+
+
+
+
+
+
