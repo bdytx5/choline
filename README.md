@@ -1,5 +1,10 @@
 # 🍳🍳🍳choline🍳🍳🍳
 
+
+INTRODUCING CHOLINE LAUNCH. THE EASIEST WAY TO LAUNCH LAMMA 2 CODE ON A P2P GPU (VAST.AI)
+
+
+
 A ml library thingy 
 
 If u have ideas, feel free to make pull requests.     
