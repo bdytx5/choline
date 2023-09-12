@@ -1,10 +1,12 @@
 # 🍳🍳🍳choline🍳🍳🍳
 
 A ml library thingy 
-If u have ideas, feel free to make pull requests. 
-my email is byyoung3@gmail.com if u want to chat
 
+If u have ideas, feel free to make pull requests.     
+     
+     my email is byyoung3@gmail.com if u want to chat
 
+     THIS REPO ALLOWS YOU TO LAUNCH LLAMA 2 CODE WITH VASTAI ON A 3090
 
 
 SETUP (mac/linux only!!!)
