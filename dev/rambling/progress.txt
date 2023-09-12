@@ -57,12 +57,125 @@ on a machine without having to go into the machine and look...
 eg. of current choline CLI 
 
 ###############################################################################
+$ choline command builder 
+
+(a modified version of vastai search offers  that helps u build a filter for the instance u want to reserve)
+since instances are being reserved in the future, you will need specify more detailed params around 
+what you are willing to pay for the different instance metrics 
+
+~~---> launches web UI in browser to easily create instance filtering command~~ 
+was gonna do a UI, but ChatGPT said it would be more consistent just to make a CLI UI 
+I Agree! "Critical feedback is as valuable as gold" - Elon 
+
+main things that a user will want to search by ... 
+
+dph_total 
+gpu_name
+storage_cost
+inet_up_cost 
+inet_down_cost 
+disk_space (the amount they enter is what will be used in the .choline.json file)
+
+we reccomend matching cuda version and possibly cudnn driver if u can 
+
+
+
+
 $ choline search offers 
 
----> launches web UI in browser to easily create instance filtering command 
+(need to implement the ui here )
+raw info looks like 
+
+
+ {
+  "bundle_id": 318426181,
+  "bundled_results": 4,
+  "bw_nvlink": 0.0,
+  "client_run_time": 1.1,
+  "compute_cap": 610,
+  "cpu_cores": 32,
+  "cpu_cores_effective": 4.0,
+  "cpu_name": "Xeon\u00ae E5-2650 v2 ",
+  "cpu_ram": 64377,
+  "credit_balance": null,
+  "credit_discount": null,
+  "credit_discount_max": 0.1,
+  "cuda_max_good": 12.0,
+  "direct_port_count": 125,
+  "discount_rate": 0.0,
+  "discounted_dph_total": 0.055,
+  "discounted_hourly": 0.0,
+  "disk_bw": 1597.1700000000003,
+  "disk_name": "PNY",
+  "disk_space": 61.9875,
+  "dlperf": 3.740338,
+  "dlperf_per_dphtotal": 68.00614545454545,
+  "dph_base": 0.055,
+  "dph_total": 0.055,
+  "driver_version": "525.60.11",
+  "duration": 183794.46223306656,
+  "end_date": 1693515599.0,
+  "external": false,
+  "flops_per_dphtotal": 111.65323636363638,
+  "geolocation": "Ukraine, UA",
+  "gpu_display_active": false,
+  "gpu_frac": 0.125,
+  "gpu_lanes": 8,
+  "gpu_mem_bw": 187.3,
+  "gpu_name": "GTX 1070",
+  "gpu_ram": 8192,
+  "gpu_totalram": 8192,
+  "has_avx": 1,
+  "host_id": 142,
+  "host_run_time": 2592000.0,
+  "hosting_type": null,
+  "id": 6363221,
+  "inet_down": 567.6,
+  "inet_down_billed": null,
+  "inet_down_cost": 0.01,
+  "inet_up": 484.2,
+  "inet_up_billed": null,
+  "inet_up_cost": 0.03,
+  "is_bid": false,
+  "logo": "/static/logos/vastai_small2.png",
+  "machine_id": 274,
+  "min_bid": 0.04,
+  "mobo_name": "X9DRX",
+  "num_gpus": 1,
+  "pci_gen": 3.0,
+  "pcie_bw": 5.7,
+  "pending_count": 0,
+  "public_ipaddr": "194.44.114.10",
+  "reliability2": 0.9908118,
+  "rentable": true,
+  "rented": false,
+  "score": 50.58805310178975,
+  "start_date": 1693331768.579934,
+  "static_ip": true,
+  "storage_cost": 0.15,
+  "storage_total_cost": 0.0,
+  "total_flops": 6.140928000000001,
+  "verification": "verified",
+  "vram_costperhour": 6.7138671875e-06,
+  "webpage": null
+ }
+]
+
+----- im gonna wait on this ..... 
+
 
 
 $ choline init 
+
+- ——> should create a .choline.json file which will contain… 
+- ———> (optional) add the arg —image which will be the name of the docker image that will be stored at key ‘image’ in the json 
+- ———> upload locations will be an array 
+- ———> startup command will be under key “onStart” 
+- ---> gpu filters 
+
+
+example 
+
 Add entire current working directory? (y/n): y
 Enter additional locations to upload (comma-separated). These will be available at ~/root/your_folder_or_file name once uploaded: ~/Desktop/brain
 Enter the tr command for run_cmd.sh: python tr.py
@@ -77,6 +190,15 @@ $ choline schedule "gpu args and sheduled time"
 ----> this works by writing a schedule folder in the ~/.choline dir where the name is the scheduled time 
 ---> the instance creation script reads from this dir and picks the closest time to when it runs 
 -----> 
+
+
+
+$ choline create "gpu args" 
+
+---> will just create an instance instantly (will ask u if the current .choline.json is the one u want)
+----> if no .choline.json, it will run choline init 
+-------> will run the instance creator script with the .choline.json file in the current working dir 
+
 
 
 $ choline status 

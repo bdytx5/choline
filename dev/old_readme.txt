@@ -1,23 +1,22 @@
 # 🍳🍳🍳choline🍳🍳🍳
 
-The cheapest and easiest way to do ML in the cloud 
+A ml library thingy 
 
-we must simplify 
 
 If u have ideas, feel free to make pull requests. 
 
 my email is byyoung3@gmail.com if u want to chat
 
 
-choline.pro
-
-<insert motivational quote about startups that won't actually help>  
-
 THE THINGS I REALLY WANT ARE .... 
 1) a cli that will let me specify when a vast instance will startup, as well as what data it will sync - without writing any sh scripts or installing any linux packages 
 2) a python library that will sync my models, and code with the vast instance, and startup and resume a training run when/if the vast instance fails (on another instance) 
 3) the library will also let me pause runs and effortlessly resume them, without any programatic code changes, as well as schedule pauses with shutdowns  
 4) alerts for various events that occur on training run (accuracy accomplishments and failures), to my email 
+
+What I suspect others might want: 
+1) 1-4 above 
+2) a way to find the cheapest FANG GPU instances (probably spot instances) and manage runs across different instances 
 
 
 Currently, the main goal is to automate a lot of the processes of training models, as well as ease the process of using p2p GPU's on vast.ai.
@@ -75,6 +74,7 @@ CLIENT -- Need to make a custom command that will rent out a GPU and set up an e
 - ------> see vast folder 
 - ~~figure out how to create a docker container reliably from a script that runs on the users local machine~~
 - ~~build machine provisioner that finds a machine for the user and starts it up (also sending docker info)~~ - i guess use vast.ai - (need to test)
+- build a instance scheduling system (local)
 - build flask api client call that requests storage, and then sends relevant files 
 
 BACKEND -- Need a backend that can handle temporary storage of a users data 

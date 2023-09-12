@@ -1,20 +1,10 @@
-
-# ################################################################################
-# # Author: Brett Young                                                          #
-# # Date: 8/18/23                                                                #
-# # Organization: Choline (not yet incorporated the company)                     #
-# #                                                                              #
-# # Description:                                                                 #
-# # This script is designed to automate the process of finding and reserving     #
-# # instances with specific GPU and driver properties that match the current     #
-# # system. Usage: `python instance_creator.py GPU_VERSION`, e.g., 3090.         #
-# ################################################################################
-
+import argparse
+import os
 import subprocess
 import json
 import sys
-import os
 from build_dockerfile import create_docker_file_from_env
+
 def convert_version_to_int(version_str):
     return int(version_str.replace('.', ''))
 
@@ -23,15 +13,23 @@ def get_size_cost(size_gb, inet_up_cost, inet_down_cost):
     download_cost = size_gb * inet_down_cost
     return upload_cost, download_cost
 
-
-def sort_offers_by_driver_and_gpu(offers, target_gpu, target_driver_version, size_gb):
+def sort_offers_by_driver_and_gpu(offers, target_gpu, target_driver_version, size_gb, storage_price, max_price=None):
     filtered_offers = [offer for offer in offers if target_gpu in offer['gpu_name']]
     target_driver_version_int = convert_version_to_int(target_driver_version)
-    sorted_offers = sorted(filtered_offers, key=lambda x: abs(convert_version_to_int(x['driver_version']) - target_driver_version_int))
+    sorted_offers = sorted(filtered_offers, key=lambda x: (abs(convert_version_to_int(x['driver_version']) - target_driver_version_int), x['dph_total'] + storage_price * size_gb))
+
     for offer in sorted_offers:
         upload_cost, download_cost = get_size_cost(size_gb, float(offer['inet_up_cost']), float(offer['inet_down_cost']))
         offer['upload_cost'] = upload_cost
         offer['download_cost'] = download_cost
+
+    if max_price is not None:
+        sorted_offers = [offer for offer in sorted_offers if offer['dph_total'] <= max_price]
+
+    if sorted_offers:
+        cheapest_offer = min(sorted_offers, key=lambda x: x['dph_total'])
+        return [cheapest_offer]
+
     return sorted_offers
 
 def get_local_driver_version():
@@ -75,8 +73,7 @@ def search_offers(cuda_version):
     offers = json.loads(result.stdout.decode())
     return offers
 
-
-def create_instance(instance_id, options, size_gb):
+def create_instance(instance_id, options, size_gb, upload_price, download_price):
     command = ["vastai", "create", "instance", str(instance_id)] + options
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -84,59 +81,62 @@ def create_instance(instance_id, options, size_gb):
         print("Error in instance creation:", result.stderr.decode())
         return None
 
-    upload_cost = size_gb * float(result.stdout.decode()['inet_up_cost'])
-    download_cost = size_gb * float(result.stdout.decode()['inet_down_cost'])
+    upload_cost = size_gb * upload_price
+    download_cost = size_gb * download_price
     print(f"Instance created successfully. Upload cost for {size_gb} GB: ${upload_cost}. Download cost for {size_gb} GB: ${download_cost}.")
 
-
-    
 def onstart_script_path(dockerfile_path):
     script_content = f"""#!/bin/bash
-# Commands to copy the Dockerfile from the project's root directory
-cp {dockerfile_path} /destination/path/
+    # Commands to copy the Dockerfile from the project's root directory
+    cp {dockerfile_path} /destination/path/
 
-# Commands to install Vim
-apt-get update && apt-get install -y vim
-"""
+    # Commands to install Vim
+    apt-get update && apt-get install -y vim
+    """
     script_path = "/path/to/your_script.sh"
     with open(script_path, 'w') as file:
         file.write(script_content)
     os.chmod(script_path, 0o755)  # Make the script executable
     return script_path
 
+def main():
+    parser = argparse.ArgumentParser(description="Instance Creator")
+    parser.add_argument('--gpu', required=True, help='GPU identifier')
+    parser.add_argument('--size', required=False, type=int, help='Size in GB')
+    parser.add_argument('--upload-price', required=True, type=float, help='Upload price')
+    parser.add_argument('--download-price', required=True, type=float, help='Download price')
+    parser.add_argument('--storage-price', required=True, type=float, help='Storage price')
+    args = parser.parse_args()
 
+    target_gpu = args.gpu
+    size_gb = args.size if args.size else get_current_directory_size()
+    upload_price = args.upload_price
+    download_price = args.download_price
+    storage_price = args.storage_price
 
+    local_driver_version = get_local_driver_version()
+    local_cuda_version = get_local_cuda_version()
+    offers = search_offers(local_cuda_version)
 
+    if offers:
+        sorted_offers = sort_offers_by_driver_and_gpu(offers, target_gpu, local_driver_version, size_gb, storage_price)
 
+        if sorted_offers:
+            print("Compatible instances:")
+            for i, offer in enumerate(sorted_offers[::-1]):
+                print(f"{i}: Instance ID: {offer['id']}, CUDA Version: {offer['cuda_max_good']}, GPUs: {offer['num_gpus']}, Driver Version: {offer['driver_version']}, Upload Cost for {size_gb} GB: ${offer['upload_cost']}, Download Cost for {size_gb} GB: ${offer['download_cost']}")
 
-###### 
-target_gpu = sys.argv[1]
-size_gb = None 
-if len(sys.argv) > 2:
-    size_gb = int(sys.argv[2])
-else:
-    size_gb = get_current_directory_size()
-local_driver_version = get_local_driver_version()
-local_cuda_version = get_local_cuda_version()
-offers = search_offers(local_cuda_version)
-
-if offers:
-    sorted_offers = sort_offers_by_driver_and_gpu(offers, target_gpu, local_driver_version, size_gb=size_gb)
-
-    if sorted_offers:
-        print("Compatible instances:")
-        for i, offer in enumerate(sorted_offers[::-1]):
-            print(f"{i}: Instance ID: {offer['id']}, CUDA Version: {offer['cuda_max_good']}, GPUs: {offer['num_gpus']}, Driver Version: {offer['driver_version']}, Upload Cost for {size_gb} GB: ${offer['upload_cost']}, Download Cost for {size_gb} GB: ${offer['download_cost']}")
-
-        choice = int(input("Enter the index of the instance you want to use: "))
-        if 0 <= choice < len(sorted_offers):
-            instance_id = sorted_offers[::-1][choice]["id"]
-            options = ["--image", "bobsrepo/pytorch:latest", "--disk", "20"]
-            onstart_script = onstart_script_path(create_docker_file_from_env())
-            options += ["--onstart", onstart_script]
-            create_instance(instance_id, options, size_gb)
-
+            choice = int(input("Enter the index of the instance you want to use: "))
+            if 0 <= choice < len(sorted_offers):
+                instance_id = sorted_offers[::-1][choice]["id"]
+                options = ["--image", "bobsrepo/pytorch:latest", "--disk", "20"]
+                onstart_script = onstart_script_path(create_docker_file_from_env())
+                options += ["--onstart", onstart_script]
+                create_instance(instance_id, options, size_gb, upload_price, download_price)
+            else:
+                print("Invalid choice. Exiting.")
         else:
-            print("Invalid choice. Exiting.")
-    else:
-        print("No suitable offers found.")
+            print("No suitable offers found.")
+
+if __name__ == "__main__":
+    main()

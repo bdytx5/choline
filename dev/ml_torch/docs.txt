@@ -1,0 +1,19 @@
+the goal is to be able to not only sync models on a sever in between epochs
+but also load from the server and resume a previous run, maintaining all previous run information (like it was never interrupted) 
+
+
+this is the main objective right now. There will be other stuff that could be cool, but this is the core pain point for me right now 
+
+
+
+
+
+
+
+in order to ensure loading from a pretrained model, the model will need to be tested for seemless loading from a .pth model -- otherwise restarting wont work. 
+the library will need to know the run id in order to fetch the model for the run when starting again after a failure 
+
+
+
+
+

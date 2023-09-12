@@ -1,0 +1,5 @@
+this is a CLI for scheduling instances on Vast AI
+specify the params for the instance you want and when you want it 
+
+
+choline "8/24/23 5am" --gpu 3090 --storage 30gb --upload-price 0.2 --download-price 0.3 --storage-price 5 --gpu-price 0.4 
