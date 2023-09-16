@@ -72,6 +72,10 @@ html_content = """
 <html>
 <head>
     <title>Chat with API</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/mode/python/python.min.js"></script>
     <script>
         function sendMessage(event) {
             if (event.shiftKey && event.keyCode === 13) {
@@ -85,7 +89,16 @@ html_content = """
                     body: JSON.stringify({ 'prompt': message })
                 }).then(response => response.text()).then(data => {
                     document.getElementById('loader').style.display = 'none';
-                    document.getElementById('chat').innerHTML += '<p><strong>API:</strong> ' + data + '</p>';
+                    const newEditorDiv = document.createElement('div');
+                    document.getElementById('chat').appendChild(newEditorDiv);
+                    const editor = CodeMirror(newEditorDiv, {
+                        mode: 'python',
+                        lineNumbers: true,
+                        readOnly: true,
+                        theme: 'monokai',
+                        value: data
+                    });
+                    editor.setSize(null, "auto");
                     document.getElementById('userInput').value = '';
                 });
             }
