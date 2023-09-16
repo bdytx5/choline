@@ -104,13 +104,13 @@ html_content = """
     <div id='loader' style='display:none;'>Loading...</div>
     <div id='chat' style='padding-bottom: 50px;'></div>
     <textarea id='userInput' style='width: 100%; height: 50px; resize: both;' onkeydown='sendMessage(event)'></textarea>
-    <p>To get a response, hit Shift+Enter.</p>
+    <p>Thanks for using Choline! To get a response, hit Shift+Enter.</p>
     <button onclick='clearChat()'>Clear Chat</button>
 </body>
 </html>
 """
 
 if __name__ == "__main__":
-    t = threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': port})
+    t = threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 5000})
     t.start()
     print(f"Visit http://127.0.0.1:{port}/chat to start chatting.")
