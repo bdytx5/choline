@@ -11,7 +11,7 @@ port_index = sys.argv.index('--port') if '--port' in sys.argv else None
 port = int(sys.argv[port_index + 1]) if port_index else 5000
 
 # Decide the backend URL
-backend_url = "http://localhost:8080/predict" if not is_test else f"http://127.0.0.1:{port}/predict"
+backend_url = "http://127.0.0.1:8080/predict" if not is_test else f"http://127.0.0.1:{port}/predict"
 
 # Number of tokens per word
 tokens_per_word = 2
@@ -47,25 +47,37 @@ def send_message():
     # Update the chat cache
     chat_cache.append(new_prompt)
 
-    # Count tokens based on custom token rule
-    tokens = sum(len(word.split()) for sentence in chat_cache for word in sentence.split()) * tokens_per_word
-
     # Concatenate all chat history to form a single prompt
     full_prompt = ''.join(chat_cache)
 
     # Create payload with concatenated prompt
-    payload = {'prompt': full_prompt, 'previous_tokens': num_prev_tokens}
+    payload = {'prompt': full_prompt}
 
     try:
         response = requests.post(backend_url, json=payload)
-        api_response = f"Bot: {response.json()['response']}\n"
-        
-        # Update chat cache
-        chat_cache.append(api_response)
 
-        return api_response.strip()
+        print(f"Received response: {response.text}")
+        
+        
+        if response.status_code == 200:
+            api_response = f"Bot: {response.text}\n"
+            chat_cache.append(api_response)
+            return api_response
+            
+        # if response.status_code == 200:
+        #     api_response = f"Bot: {response.json()['response']}\n"
+        #     chat_cache.append(api_response)
+        #     return api_response.strip()
+        else:
+            return f"Failed to get a valid response: {response.text}"
     except Exception as e:
+        print(f"Exception caught: {e}")
         return str(e)
+
+
+
+
+
 
 html_content = """
 <!DOCTYPE html>
@@ -89,16 +101,29 @@ html_content = """
                     body: JSON.stringify({ 'prompt': message })
                 }).then(response => response.text()).then(data => {
                     document.getElementById('loader').style.display = 'none';
-                    const newEditorDiv = document.createElement('div');
-                    document.getElementById('chat').appendChild(newEditorDiv);
-                    const editor = CodeMirror(newEditorDiv, {
-                        mode: 'python',
-                        lineNumbers: true,
-                        readOnly: true,
-                        theme: 'monokai',
-                        value: data
-                    });
-                    editor.setSize(null, "auto");
+                    
+                    // Split the API response by '```'
+                    const parts = data.split('```');
+                    for (let i = 0; i < parts.length; i++) {
+                        const part = parts[i].trim();
+                        if (i % 2 === 0) {
+                            // normal text
+                            document.getElementById('chat').innerHTML += '<p><strong>Bot:</strong> ' + part + '</p>';
+                        } else {
+                            // code snippet
+                            const newEditorDiv = document.createElement('div');
+                            document.getElementById('chat').appendChild(newEditorDiv);
+                            const editor = CodeMirror(newEditorDiv, {
+                                mode: 'python',
+                                lineNumbers: true,
+                                readOnly: true,
+                                theme: 'monokai',
+                                value: part
+                            });
+                            editor.setSize(null, "auto");
+                        }
+                    }
+                    
                     document.getElementById('userInput').value = '';
                 });
             }
@@ -122,6 +147,9 @@ html_content = """
 </body>
 </html>
 """
+
+
+
 
 if __name__ == "__main__":
     t = threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 5000})
