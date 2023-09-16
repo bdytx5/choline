@@ -18,7 +18,7 @@ import torch
 
 app = Flask(__name__)
 
-model_id = "codellama/CodeLlama-34b-hf"
+model_id = "codellama/CodeLlama-34b-Instruct-hf"
 quantization_config = BitsAndBytesConfig(
    load_in_4bit=True,
    bnb_4bit_compute_dtype=torch.float16
@@ -34,23 +34,36 @@ model = AutoModelForCausalLM.from_pretrained(
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-    prompt = data['prompt']
+    user_msg = data['prompt']
+    system_prompt = "<<SYS>>\\nAnswer the users question\\n<</SYS>>\\n\\n"
+
+    # Construct the prompt
+    prompt = f"<s>[INST] {user_msg} [/INST]"
+
+    # Tokenize and send to device
     inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+
+    # Generate the response
     output = model.generate(
         inputs["input_ids"],
-        max_new_tokens=200,
+        max_length=250,
         do_sample=True,
         top_p=0.9,
-        temperature=0.1,
+        temperature=0.1
     )
     output = output[0].to("cpu")
-    return tokenizer.decode(output)
+
+    # Decode the output
+    decoded_output = tokenizer.decode(output, skip_special_tokens=True)
+
+    return decoded_output
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
     '''
     
-    script_content = f"""#!/bin/bash
+    script_content = f'''#!/bin/bash
 python_version=$(python --version 2>&1 | awk '{{print $2}}')
 required_version="{python_version}"
 if [ "$python_version" != "$required_version" ]; then
@@ -67,7 +80,7 @@ cat <<EOL > ~/choline_api.py
 EOL
 
 python ~/choline_api.py &
-"""
+'''
     
     script_path = os.path.join(choline_dir, f"{service_name}_onstart.sh")
     with open(script_path, 'w') as file:
@@ -75,6 +88,8 @@ python ~/choline_api.py &
     
     os.chmod(script_path, 0o755)
     return script_path
+
+
 def search_offers(cuda_version, additional_query=""):
     # query = f"cuda_vers == {cuda_version}"
     query = f""
@@ -99,12 +114,7 @@ def create_instance(instance_id, options):
         return None
     print(f"Instance created successfully.")
 
-# def sort_offers_by_driver_and_gpu(offers):
 
-#     filtered_offers = offers # user now filters using stock vast cli 
-#     sorted_and_filtered_offers = sorted(filtered_offers, key=lambda x: x['dph_total'])
-
-#     return sorted_and_filtered_offers
 
 def custom_sort_key(offer, expected_storage_gb, expected_runtime_hr, expected_upload_gb=1.0):
     dph = offer['dph_base']
@@ -119,7 +129,17 @@ def custom_sort_key(offer, expected_storage_gb, expected_runtime_hr, expected_up
 def sort_offers_by_custom_criteria(offers, expected_storage_gb, expected_runtime_hr):
     return sorted(offers, key=lambda x: custom_sort_key(x, expected_storage_gb, expected_runtime_hr))
 
-
+def pretty_print_offer(offer, index):
+    print(f"########### VASTAI OFFERS {index + 1} ###########")
+    print(f"Cost per hour: {offer['dph_base']}")
+    print(f"Internet download speed: {offer['inet_down']}")
+    print(f"Internet upload speed: {offer['inet_up']}")
+    print(f"DL Performance: {offer['dlperf']}")
+    print(f"Reliability: {offer['reliability2']}")
+    print(f"Storage cost: {offer['storage_cost']}")
+    print(f"Internet download cost: {offer['inet_down_cost']}")
+    print(f"Internet upload cost: {offer['inet_up_cost']}")
+    print("#######################################\n\n")
 
 def main():
     parser = argparse.ArgumentParser(description="Choline CLI")
@@ -136,21 +156,26 @@ def main():
             query = "gpu_name=RTX_3090 disk_space > 120"
 
             offers = search_offers("12.0", query)
-
-            exp_storage = 120 
+            exp_storage = 120
             offers = sort_offers_by_custom_criteria(offers, expected_storage_gb=exp_storage, expected_runtime_hr=2)
 
             if offers:
-                print(f"Cheapest offer: {offers[0]}")
+                print("Five cheapest offers:")
+                for i, offer in enumerate(offers[:5]):
+                    pretty_print_offer(offer, i)
+
+                choice = int(input("Select an offer by entering its number (1-5): ")) - 1
+                selected_offer = offers[choice]
+                pretty_print_offer(selected_offer, choice)
+                
                 confirmation = input("Would you like to proceed? (y/n): ")
                 if confirmation.lower() == 'y':
-                    instance_id = offers[0]["id"]
+                    instance_id = selected_offer["id"]
                     onstart_script = generate_onstart_script("llama2code")
-                    options = ["--image", "python:3.8", "--disk", "120", "--onstart", onstart_script, "--env", "'-e TZ=PDT -e XNAME=XX4 -p 22:22 -p 8080:8080'"
-                               ]
+                    options = ["--image", "python:3.8", "--disk", "120", "--onstart", onstart_script, "--env", "-e TZ=PDT -e XNAME=XX4 -p 22:22 -p 8080:8080"]
                     create_instance(instance_id, options)
-                
-                    print("Instance creation requestion complete. Now setting up your instance with id {instance_id}. Run 'choline status 'instance id'' to check the logs for your setup ")
+                    
+                    print(f"Instance creation request complete. Now setting up your instance with id {instance_id}. Run 'choline status 'instance id'' to check the logs for your setup.")
                 else:
                     print("Operation canceled.")
             else:
