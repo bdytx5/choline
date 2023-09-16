@@ -46,7 +46,7 @@ def predict():
     # Generate the response
     output = model.generate(
         inputs["input_ids"],
-        max_length=8000,
+        max_length=1000,
         do_sample=True,
         top_p=0.9,
         temperature=0.1
