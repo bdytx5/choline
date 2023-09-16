@@ -17,7 +17,7 @@ THIS REPO ALLOWS YOU TO LAUNCH LLAMA 2 CODE WITH VASTAI ON A 3090
 SETUP (mac/linux only!!!)
 
 - Setup vastai account w payment info and setup your ssh-keygen on your local system.. see https://vast.ai/docs/gpu-instances/ssh
-- clone the repo, go to the launch dir, and run the command 'python launch.py llama2code' then follow the instructions given in the command line 
+- clone the repo, go to the launch dir, and run the command 'python launch.py launch llama2code' then follow the instructions given in the command line 
 -----> note WE FIND YOU THE BEST DEAL ON A 3090 WITH 120GB OF STORAGE ASSUMED FOR 3HRS AND 1GB UPLOADED AND 120GB DOWNLOADED!
 - wait for the instance to set up. You can run 'python status.py' to monitor startup 
 - after the server api is running, run app.py 
