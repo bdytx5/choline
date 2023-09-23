@@ -56,26 +56,12 @@ def pretty_print_offer(offer, index):
 
 
 
-def generate_onstart_script():
-    choline_data = get_choline_json_data()
-    python_version = choline_data.get("python_version", "3.8")
-    requirements = choline_data.get("requirements", [])
-
-    with open("./choline_onstart.sh", "w") as f:
-        f.write("#!/bin/bash\n")
-        f.write(f"conda create --name myenv python={python_version}\n")
-        f.write("source activate myenv\n")
-
-        for package in requirements:
-            f.write(f"conda install {package} --yes\n")
-
-        f.write("echo 'Environment setup complete'\n")
-
     
 
 
 #### LOOKS LIKE THERE IS A SIZE LIMIT FOR THE SH SCRIPT, SO WE WILL NEED TO MAKE OUR OWN SETUP ....
-def generate_onstart_script():
+####### this writes the script which will be sent by the monitor script to the instance and then be automatically be run 
+def generate_setup_script():
     choline_data = get_choline_json_data()
     python_version = choline_data.get('python_version', '3.8')
     requirements = choline_data.get('requirements', [])    
@@ -90,9 +76,9 @@ def generate_onstart_script():
         "source $HOME/miniconda/bin/activate",
         "conda init",
         "# Create environment",
-        f"conda create --name myenv python={python_version} -y",
+        f"conda create --name choline python={python_version} -y",
         "# Activate environment",
-        "conda activate myenv",
+        "conda activate choline",
     ]
 
     # Add lines to install required packages
@@ -102,10 +88,31 @@ def generate_onstart_script():
     script_content = "\n".join(script_lines)
 
     # Save the script to a file
+    with open("choline_setup.sh", "w") as f:
+        f.write(script_content)
+
+    return "./choline_setup.sh"
+
+
+
+## the onstart script writes the success file and then waits for the setup script to arrive, then runs it 
+def generate_onstart_script():
+    script_lines = [
+        "#!/bin/bash",
+        "echo '0' > choline.txt",
+        "while [ ! -f choline_setup.sh ]; do",
+        "  sleep 1",
+        "done",
+        "sleep 5",  # Allow time for the full script to arrive
+        "bash choline_setup.sh"
+    ]
+    script_content = "\n".join(script_lines)
+
     with open("choline_onStart.sh", "w") as f:
         f.write(script_content)
 
     return "./choline_onStart.sh"
+
 
 
 
@@ -141,15 +148,20 @@ def create_instance(instance_id, options):
 
 
 
+def run_monitor_instance_script(instance_id, max_checks=30):
+    subprocess.Popen(["python", "./monitor.py", "--id", str(instance_id), "--max_checks", str(max_checks)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+
 def main():
     choline_data = get_choline_json_data()
     hardware_filters = choline_data.get('hardware_filters', {})
     gpu_name = hardware_filters.get('gpu_name', '')
     disk_space_str = hardware_filters.get('disk_space', '')
     image = choline_data.get('image', 'python:3.8')
-    # startup_script_path = generate_onstart_script()
+    startup_script_path = generate_onstart_script()
 
-    startup_script_path = "./choline_onStart.sh"
+    generate_setup_script()
 
     # Extract operator and value from the disk_space string
     match = re.match(r"([<>!=]+)(\d+)", disk_space_str)
@@ -181,7 +193,7 @@ def main():
             instance_id = selected_offer["id"]
             options = ["--image", image, "--disk", str(disk_space_value), "--onstart", startup_script_path, "--env", "-e TZ=PDT -e XNAME=XX4 -p 22:22 -p 8080:8080"]
             create_instance(instance_id, options)
-
+            run_monitor_instance_script(instance_id=instance_id)
             print(f"Instance creation request complete. Now setting up your instance with id {instance_id}. Run 'choline status 'instance id'' to check the logs for your setup.")
         else:
             print("Operation canceled.")

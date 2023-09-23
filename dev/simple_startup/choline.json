@@ -12,9 +12,7 @@
     "onStart": "python go.py",
     "local_cuda_version": "11.7",
     "upload_locations": [
-        "/home/brett/choline/my_choline_project",
-        "idk1",
-        "idk2"
+        "/Users/brettyoung/Desktop/dev/choline/dev/simple_startup/test_payload.txt"
     ],
     "python_version": "3.8.5",
 
