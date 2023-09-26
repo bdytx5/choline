@@ -5,14 +5,14 @@
     "conda_version": "4.11.0",
     "gpu_filters": "idk",
     "hardware_filters": {   
-            "gpu_name": "RTX_3090", 
-            "disk_space": ">120"
+            "gpu_name": "RTX_3060", 
+            "disk_space": ">16"
     },
 
     "onStart": "python go.py",
     "local_cuda_version": "11.7",
     "upload_locations": [
-        "/Users/brettyoung/Desktop/dev/choline/dev/simple_startup/test_payload.txt"
+        "/Users/brettyoung/Desktop/dev/choline/dev/simple_startup/test_payload"
     ],
     "python_version": "3.8.5",
 

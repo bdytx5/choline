@@ -98,9 +98,9 @@ def generate_setup_script():
 ## the onstart script writes the success file and then waits for the setup script to arrive, then runs it 
 def generate_onstart_script():
     script_lines = [
-        "#!/bin/bash",
-        "echo '0' > choline.txt",
-        "while [ ! -f choline_setup.sh ]; do",
+        # "#!/bin/bash",
+        "echo '0' > ~/choline.txt",
+        "while [ ! -f ~/cholineSetupPayload/choline_setup.sh ]; do",
         "  sleep 1",
         "done",
         "sleep 5",  # Allow time for the full script to arrive
@@ -134,23 +134,38 @@ def search_offers(additional_query=""):
 
 
 
+import re
 
 def create_instance(instance_id, options):
     command = ["vastai", "create", "instance", str(instance_id)] + options
     print(command)
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     print("res {}".format(result))
+
     if result.returncode != 0:
         print("Error in instance creation:", result.stderr.decode())
         return None
-    print(f"Instance created successfully.")
 
+    stdout_str = result.stdout.decode()
+    try:
+        match = re.search(r"'new_contract': (\d+)", stdout_str)
+        if match:
+            new_contract = match.group(1)
+            print(f"New contract ID: {new_contract}")
+        else:
+            print("Failed to find new contract ID.")
+            return None
+    except Exception as e:
+        print(f"Error while parsing: {e}")
+        return None
+
+    print("Instance created successfully.")
+    return new_contract
 
 
 
 def run_monitor_instance_script(instance_id, max_checks=30):
-    subprocess.Popen(["python", "./monitor.py", "--id", str(instance_id), "--max_checks", str(max_checks)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+    subprocess.Popen(["sudo", "python", "./monitor.py", "--id", str(instance_id), "--max_checks", str(max_checks)])
 
 
 def main():
@@ -192,8 +207,9 @@ def main():
         if confirmation.lower() == 'y':
             instance_id = selected_offer["id"]
             options = ["--image", image, "--disk", str(disk_space_value), "--onstart", startup_script_path, "--env", "-e TZ=PDT -e XNAME=XX4 -p 22:22 -p 8080:8080"]
-            create_instance(instance_id, options)
-            run_monitor_instance_script(instance_id=instance_id)
+            contract_id = create_instance(instance_id, options)
+            print(int(contract_id))
+            run_monitor_instance_script(instance_id=int(contract_id))
             print(f"Instance creation request complete. Now setting up your instance with id {instance_id}. Run 'choline status 'instance id'' to check the logs for your setup.")
         else:
             print("Operation canceled.")
