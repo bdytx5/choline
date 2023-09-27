@@ -14,9 +14,18 @@ import paramiko
 from scp import SCPClient
 from fnmatch import fnmatch
 import traceback
+import yaml 
+
 
 print("Exception traceback:")
 traceback.print_exc()
+
+import yaml
+
+def get_choline_yaml_data():
+    with open('choline.yaml', 'r') as f:
+        data = yaml.safe_load(f)
+    return data
 
 
 def get_choline_json_data():
@@ -102,10 +111,38 @@ def check_for_choline_txt(vastai_id):
     return True
 
 
+# def send_choline_setup(vastai_id, max_retries=100):
+#     # needs to read the setup script from choline.yaml and write it to .choline/choline_setup.sh then send it 
+#     username, host, port = get_ssh_details(vastai_id)
+#     current_path = os.getcwd()
+#     local_path = os.path.join(current_path, '.choline')
+#     remote_path = '/root'
+#     retries = 0
+#     while retries < max_retries:
+#         try:
+#             ssh_copy(username, host, port, local_path, remote_path)
+#             print("Sent setup script")
+#             break
+#         except Exception as e:
+#             print(f"Failed to send choline_setup: {e}. Waiting 5 seconds before retrying.")
+#             time.sleep(5)
+#             retries += 1
+
+
 def send_choline_setup(vastai_id, max_retries=100):
+    choline_data = get_choline_yaml_data()
+    setup_script = choline_data.get('setup_script', '')
+
+    local_path = os.path.join(os.getcwd(), '.choline')
+    if not os.path.exists(local_path):
+        os.makedirs(local_path)
+
+    setup_script_path = os.path.join(local_path, 'choline_setup.sh')
+
+    with open(setup_script_path, 'w') as f:
+        f.write(setup_script)
+
     username, host, port = get_ssh_details(vastai_id)
-    current_path = os.getcwd()
-    local_path = os.path.join(current_path, 'cholineSetupPayload')
     remote_path = '/root'
     retries = 0
     while retries < max_retries:
@@ -118,6 +155,7 @@ def send_choline_setup(vastai_id, max_retries=100):
             time.sleep(5)
             retries += 1
 
+            
 def send_upload_locations(vastai_id, upload_locations, max_retries=100):
     username, host, port = get_ssh_details(vastai_id)
     current_path = os.getcwd()
@@ -135,7 +173,7 @@ def send_upload_locations(vastai_id, upload_locations, max_retries=100):
                 time.sleep(5)
                 retries += 1
 
-    complete_file = os.path.join(current_path, 'choline_complete.txt')
+    complete_file = os.path.join(current_path, '.choline/choline_complete.txt')
     with open(complete_file, 'w') as f:
         f.write('0')
 

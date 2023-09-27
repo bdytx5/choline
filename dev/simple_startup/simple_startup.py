@@ -12,7 +12,14 @@ import subprocess
 import json
 import torch
 import re 
+import yaml 
+import os
 
+def get_choline_yaml_data():
+    with open('./choline.yaml', 'r') as yaml_file:
+        yaml_data = yaml.safe_load(yaml_file)
+    json_data = json.dumps(yaml_data, indent=4)
+    return json_data
 
 
 
@@ -63,7 +70,38 @@ def pretty_print_offer(offer, index):
 ####### this writes the script which will be sent by the monitor script to the instance and then be automatically be run 
 def generate_setup_script():
     choline_data = get_choline_json_data()
-    python_version = choline_data.get('python_version', '3.8')
+
+def ssh_copy_directory(scp, ssh, local_path, remote_base_path):
+    ignore_patterns = read_cholineignore()
+    cwd = os.getcwd()
+    for root, dirs, files in os.walk(local_path):
+        for file_name in files:
+            local_file = os.path.join(root, file_name)
+            relative_path = os.path.relpath(local_file, cwd)
+            if should_ignore(relative_path, ignore_patterns):
+                continue
+            remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
+            remote_dir = os.path.dirname(remote_file)
+            
+            stdin, stdout, stderr = ssh.exec_command(f"mkdir -p {remote_dir}")
+            stdout.read()
+            scp.put(local_file, remote_file)
+
+
+
+def ssh_copy(username, host, port, src, dest):
+    client = paramiko.SSHClient()
+    client.load_system_host_keys()
+    client.set_missing_host_key_policy(paramiko.WarningPolicy)
+    client.connect(host, port=port, username=username)
+    with SCPClient(client.get_transport()) as scp:
+        if os.path.isdir(src):
+            ssh_copy_directory(scp, client, src, dest)
+        else:
+            relative_path = os.path.relpath(src, os.getcwd())
+            remote_file = os.path.join(dest, relative_path)
+            scp.put(src, remote_file)
+    client.close()
     requirements = choline_data.get('requirements', [])    
 
     script_lines = [
@@ -94,27 +132,27 @@ def generate_setup_script():
     return "./choline_setup.sh"
 
 
-import os
+
 
 def generate_onstart_script():
     script_lines = [
         "#!/bin/bash",
-        "mkdir -p ~/cholineSetupPayload",  # Create the directory if it doesn't exist
+        "mkdir -p ~/.choline",  # Create the directory if it doesn't exist
         "echo '0' > ~/choline.txt",
-        "while [ ! -f ~/cholineSetupPayload/choline_setup.sh ]; do",
+        "while [ ! -f ~/.choline/choline_setup.sh ]; do",
         "  sleep 1",
         "done",
         "sleep 5",  # Allow time for the full script to arrive
-        "echo 'running setup script' > ~/choline.txt"
-        "sh -x ~/cholineSetupPayload/choline_setup.sh"  # Run the script from its expected directory
+        "echo 'running setup script' > ~/choline.txt",
+        "sh -x ~/.choline/choline_setup.sh"  # Run the script from its expected directory
     ]
     script_content = "\n".join(script_lines)
 
-    with open("choline_onStart.sh", "w") as f:
+    with open("./.choline/choline_onStart.sh", "w") as f:
         f.write(script_content)
         os.chmod("choline_onStart.sh", 0o755)  # Make the script executable
 
-    return "./choline_onStart.sh"
+    return "./.choline/choline_onStart.sh"
 
 
 

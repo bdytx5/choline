@@ -28,3 +28,11 @@ how it works
 -> onstart is a script that writes a choline.txt file signifying completion and also waits for choline_setup.sh to arrive 
 -> one monitor detects choline.txt, it sends the choline_setup.sh and the rest of the files to be sent to the instance 
 -> after that, it will wait until it revcieves a choline_sync_complete.txt file, which signifies its ready to run the onstart command 
+
+
+
+
+UPDATES 
+
+- i switched from json to yaml because yaml is better yo 
+

@@ -9,7 +9,7 @@ import os
 import sys
 import json 
 
-
+import yaml 
 import shutil
 from datetime import datetime
 
@@ -47,6 +47,36 @@ from datetime import datetime
 #     with open(dockerfile_path, 'w') as file:
 #         file.write('\n'.join(dockerfile_lines))
 ######################### on hold for now 
+
+# def create_upload_dirs():
+#     add_cwd = input("Add entire current working directory? (y/n): ").strip().lower()
+#     locations = []
+#     if add_cwd == 'y':
+#         locations.append(os.getcwd())
+#     additional_locations = input("Enter additional locations to upload (comma-separated,no spaces): ").split(',')
+#     locations.extend(additional_locations)
+#     return locations
+
+
+# #### added in checkpointed vs static 
+# def create_upload_dirs():
+#     # For checkpointed files
+#     # add_cwd_checkpoint = input("Add entire current working directory to checkpointed files? (y/n): ").strip().lower()
+#     # checkpoint_locations = []
+#     # if add_cwd_checkpoint == 'y':
+#     #     checkpoint_locations.append(os.getcwd())
+#     # additional_checkpoint_locations = input("Enter additional locations to upload as checkpointed (comma-separated, no spaces): ").split(',')
+#     # checkpoint_locations.extend(additional_checkpoint_locations)
+    
+#     # For directly copied files
+#     add_cwd_copy = input("Add entire current working directory to directly copied files? (y/n): ").strip().lower()
+#     copy_locations = []
+#     if add_cwd_copy == 'y':
+#         copy_locations.append(os.getcwd())
+#     additional_copy_locations = input("Enter additional locations to upload as directly copied (comma-separated, no spaces): ").split(',')
+#     copy_locations.extend(additional_copy_locations)
+    
+#     return 0, copy_locations
 
 
 
@@ -100,35 +130,24 @@ def create_choline_json(image_name, checkpoint_locations, direct_copy_locations,
         json.dump(choline_json, f, indent=4)
 
 
-# def create_upload_dirs():
-#     add_cwd = input("Add entire current working directory? (y/n): ").strip().lower()
-#     locations = []
-#     if add_cwd == 'y':
-#         locations.append(os.getcwd())
-#     additional_locations = input("Enter additional locations to upload (comma-separated,no spaces): ").split(',')
-#     locations.extend(additional_locations)
-#     return locations
 
 
-# #### added in checkpointed vs static 
-# def create_upload_dirs():
-#     # For checkpointed files
-#     # add_cwd_checkpoint = input("Add entire current working directory to checkpointed files? (y/n): ").strip().lower()
-#     # checkpoint_locations = []
-#     # if add_cwd_checkpoint == 'y':
-#     #     checkpoint_locations.append(os.getcwd())
-#     # additional_checkpoint_locations = input("Enter additional locations to upload as checkpointed (comma-separated, no spaces): ").split(',')
-#     # checkpoint_locations.extend(additional_checkpoint_locations)
-    
-#     # For directly copied files
-#     add_cwd_copy = input("Add entire current working directory to directly copied files? (y/n): ").strip().lower()
-#     copy_locations = []
-#     if add_cwd_copy == 'y':
-#         copy_locations.append(os.getcwd())
-#     additional_copy_locations = input("Enter additional locations to upload as directly copied (comma-separated, no spaces): ").split(',')
-#     copy_locations.extend(additional_copy_locations)
-    
-#     return 0, copy_locations
+def create_choline_yaml(image_name, direct_copy_locations, start_cmd, gpu_name, disk_space):
+    choline_yaml = {
+        "image": image_name,
+        "upload_locations": direct_copy_locations,
+        "onStart": start_cmd,
+        "local_cuda_version": get_local_cuda_version(),
+        "python_version": get_python_version(),
+        "requirements": get_requirements_list(),
+        "conda_version": get_conda_version(),
+        "hardware_filters": {"gpu_name": gpu_name, "disk_space": disk_space}
+    }
+
+    with open('choline.yaml', 'w') as f:
+        yaml.dump(choline_yaml, f, default_flow_style=False, indent=4)
+
+
 
 def create_upload_dirs():
     # For checkpointed files
@@ -193,11 +212,13 @@ def ask_for_disk_space():
 
 def init_command():
     image = ask_for_image_choice()
-    removed, copy_locations = create_upload_dirs()
+    _, copy_locations = create_upload_dirs()
     start_cmd = create_run_cmd()
     gpu_filters = ask_for_gpu_choice()
     disk_space = ask_for_disk_space()
-    create_choline_json(image, removed, copy_locations, start_cmd, gpu_filters, disk_space)
+    # create_choline_json(image, removed, copy_locations, start_cmd, gpu_filters, disk_space)
+    create_choline_yaml(image, copy_locations, start_cmd, gpu_filters, disk_space)
+
 
 
 
