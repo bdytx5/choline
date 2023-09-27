@@ -13,6 +13,20 @@ import json
 import shutil
 from datetime import datetime
 
+# def late_init_command_for_choline_launch():
+#     image_name, gpu_filters = None, None 
+#     if image_name is None:
+#         image_name = input("Enter the Docker image name (default is pytorch/pytorch): ") or 'pytorch/pytorch'
+        
+    
+#     if gpu_filters is None:
+#         gpu_filters = input("Enter GPU filters for Vast.ai: ")
+
+#     checkpoint_locations, copy_locations = create_upload_dirs()
+#     start_cmd = create_run_cmd()
+    
+#     create_choline_json(image_name, checkpoint_locations, copy_locations, start_cmd, gpu_filters)
+
 # from cho_createv2 import create_command
 ######################### on hold for now 
 # def create_dockerfile(choline_dir):
@@ -69,20 +83,20 @@ def get_conda_version():
 
 
 
-def create_choline_json(image_name, checkpoint_locations, direct_copy_locations, start_cmd, gpu_filters):
+def create_choline_json(image_name, checkpoint_locations, direct_copy_locations, start_cmd, gpu_name,disk_space):
     choline_json = {
         "image": image_name,
-        "checkpoint_upload_locations": checkpoint_locations,
-        "direct_copy_upload_locations": direct_copy_locations,
+        # "checkpoint_upload_locations": checkpoint_locations,
+        "upload_locations": direct_copy_locations,
         "onStart": start_cmd,
         "local_cuda_version": get_local_cuda_version(),
         "python_version": get_python_version(),
         "requirements": get_requirements_list(),
         "conda_version": get_conda_version(),
-        "gpu_filters": gpu_filters
+        "hardware_filters": {"gpu_name": gpu_name, "disk_space":disk_space}
     }
     
-    with open('.choline.json', 'w') as f:
+    with open('choline.json', 'w') as f:
         json.dump(choline_json, f, indent=4)
 
 
@@ -96,57 +110,98 @@ def create_choline_json(image_name, checkpoint_locations, direct_copy_locations,
 #     return locations
 
 
-#### added in checkpointed vs static 
+# #### added in checkpointed vs static 
+# def create_upload_dirs():
+#     # For checkpointed files
+#     # add_cwd_checkpoint = input("Add entire current working directory to checkpointed files? (y/n): ").strip().lower()
+#     # checkpoint_locations = []
+#     # if add_cwd_checkpoint == 'y':
+#     #     checkpoint_locations.append(os.getcwd())
+#     # additional_checkpoint_locations = input("Enter additional locations to upload as checkpointed (comma-separated, no spaces): ").split(',')
+#     # checkpoint_locations.extend(additional_checkpoint_locations)
+    
+#     # For directly copied files
+#     add_cwd_copy = input("Add entire current working directory to directly copied files? (y/n): ").strip().lower()
+#     copy_locations = []
+#     if add_cwd_copy == 'y':
+#         copy_locations.append(os.getcwd())
+#     additional_copy_locations = input("Enter additional locations to upload as directly copied (comma-separated, no spaces): ").split(',')
+#     copy_locations.extend(additional_copy_locations)
+    
+#     return 0, copy_locations
+
 def create_upload_dirs():
     # For checkpointed files
-    add_cwd_checkpoint = input("Add entire current working directory to checkpointed files? (y/n): ").strip().lower()
-    checkpoint_locations = []
-    if add_cwd_checkpoint == 'y':
-        checkpoint_locations.append(os.getcwd())
-    additional_checkpoint_locations = input("Enter additional locations to upload as checkpointed (comma-separated, no spaces): ").split(',')
-    checkpoint_locations.extend(additional_checkpoint_locations)
+    # add_cwd_checkpoint = input("Add entire current working directory to checkpointed files? (y/n): ").strip().lower()
+    # checkpoint_locations = []
+    # if add_cwd_checkpoint == 'y':
+    #     checkpoint_locations.append(os.getcwd())
+    # additional_checkpoint_locations = input("Enter additional locations to upload as checkpointed (comma-separated, no spaces): ").split(',')
+    # checkpoint_locations.extend(additional_checkpoint_locations)
     
     # For directly copied files
     add_cwd_copy = input("Add entire current working directory to directly copied files? (y/n): ").strip().lower()
     copy_locations = []
     if add_cwd_copy == 'y':
         copy_locations.append(os.getcwd())
-    additional_copy_locations = input("Enter additional locations to upload as directly copied (comma-separated, no spaces): ").split(',')
-    copy_locations.extend(additional_copy_locations)
+    additional_copy_locations_input = input("Enter additional locations to upload as directly copied (comma-separated, no spaces): ")
+    if additional_copy_locations_input.strip():
+        additional_copy_locations = additional_copy_locations_input.split(',')
+        copy_locations.extend(additional_copy_locations)
     
-    return checkpoint_locations, copy_locations
+    return 0, copy_locations
 
-# Example usage
 
 def create_run_cmd():
     tr_command = input("Enter the train command after setting up your instance: ")
     return tr_command
 
 
+def ask_for_gpu_choice():
+    gpu_choices = [
+        'RTX_3060', 'H100', 'H100 PCIE', 'A100', 'RTX_3080', 'RTX_3090', 'A100 SXM4',
+        'RTX_A5000', 'RTX_4090', 'RTX_3070', 'Tesla_V100', 'A401', 'RTX_3090',
+        'RTX_A4000'
+    ]
+    print("Available GPUs:")
+    for idx, choice in enumerate(gpu_choices):
+        print(f"{idx}. {choice}")
+    selected_idx = int(input("Enter the number corresponding to your choice: "))
+    return gpu_choices[selected_idx]
+
+def ask_for_image_choice():
+    image_choices = [
+        'pytorch/pytorch',
+        'tensorflow/tensorflow',
+        'nvidia/cuda:12.0.0-devel-ubuntu20.04',
+        'ubuntu:latest',
+        'alpine:latest'
+    ]
+    print("Available Images:")
+    for idx, choice in enumerate(image_choices):
+        print(f"{idx}. {choice}")
+    selected_idx = int(input("Enter the number corresponding to your choice: "))
+    return image_choices[selected_idx]
 
 
 
-def init_command(args):
-    image_name = args.image
-    checkpoint_locations, copy_locations = create_upload_dirs()
+
+def ask_for_disk_space():
+    disk_space = input("Enter the amount of disk space needed (in GB): ")
+    return f">{disk_space}"
+
+
+def init_command():
+    image = ask_for_image_choice()
+    removed, copy_locations = create_upload_dirs()
     start_cmd = create_run_cmd()
-    gpu_filters = args.gpu_filters
-    create_choline_json(image_name, checkpoint_locations, copy_locations, start_cmd, gpu_filters)
+    gpu_filters = ask_for_gpu_choice()
+    disk_space = ask_for_disk_space()
+    create_choline_json(image, removed, copy_locations, start_cmd, gpu_filters, disk_space)
 
 
-def late_init_command_for_choline_launch():
-    image_name, gpu_filters = None, None 
-    if image_name is None:
-        image_name = input("Enter the Docker image name (default is pytorch/pytorch): ") or 'pytorch/pytorch'
-        
-    
-    if gpu_filters is None:
-        gpu_filters = input("Enter GPU filters for Vast.ai: ")
 
-    checkpoint_locations, copy_locations = create_upload_dirs()
-    start_cmd = create_run_cmd()
-    
-    create_choline_json(image_name, checkpoint_locations, copy_locations, start_cmd, gpu_filters)
+
 
 
 # def main():
@@ -165,5 +220,5 @@ def late_init_command_for_choline_launch():
 #     args = parser.parse_args()
 #     args.func(args)
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    init_command()

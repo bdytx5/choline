@@ -94,25 +94,27 @@ def generate_setup_script():
     return "./choline_setup.sh"
 
 
+import os
 
-## the onstart script writes the success file and then waits for the setup script to arrive, then runs it 
 def generate_onstart_script():
     script_lines = [
-        # "#!/bin/bash",
+        "#!/bin/bash",
+        "mkdir -p ~/cholineSetupPayload",  # Create the directory if it doesn't exist
         "echo '0' > ~/choline.txt",
         "while [ ! -f ~/cholineSetupPayload/choline_setup.sh ]; do",
         "  sleep 1",
         "done",
         "sleep 5",  # Allow time for the full script to arrive
-        "bash choline_setup.sh"
+        "echo 'running setup script' > ~/choline.txt"
+        "sh -x ~/cholineSetupPayload/choline_setup.sh"  # Run the script from its expected directory
     ]
     script_content = "\n".join(script_lines)
 
     with open("choline_onStart.sh", "w") as f:
         f.write(script_content)
+        os.chmod("choline_onStart.sh", 0o755)  # Make the script executable
 
     return "./choline_onStart.sh"
-
 
 
 

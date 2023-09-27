@@ -1,7 +1,11 @@
 {
     "image": "pytorch/pytorch",
-    "upload_locations": [
-        "/Users/brettyoung/Desktop/dev/choline/dev/simple_startup"
+    "checkpoint_upload_locations": [
+        "n"
+    ],
+    "direct_copy_upload_locations": [
+        "/Users/brettyoung/Desktop/dev/choline/dev/simple_startup",
+        ""
     ],
     "onStart": "python simple_startup/init.py",
     "local_cuda_version": "12.0",
@@ -388,7 +392,7 @@
     ],
     "conda_version": "23.7.2",
     "hardware_filters": {
-        "gpu_name": "RTX_3060",
-        "disk_space": ">16"
+        "gpu_name": "3060|3060ti",
+        "disk_space": "16"
     }
 }
