@@ -1,10 +1,6 @@
 # 🍳🍳🍳choline🍳🍳🍳
 
 
-INTRODUCING CHOLINE LAUNCH. THE EASIEST WAY TO LAUNCH LAMMA 2 CODE ON A P2P GPU (VAST.AI)
-
-
-
 A ml library thingy 
 
 If u have ideas, feel free to make pull requests.     
@@ -24,20 +20,6 @@ SETUP (mac/linux only!!!)
 
 
 
-
-BUGS 
-
-~~SOMETIMES THE MODEL RESPONDS WITH THE QUESTION. IM NOT SURE WHAT THE ISSUE IS.~~ 
-
-
-IMPROVEMENTS 
-
-~~THE WEB UI (app.py) IS BARE BONES AS IT GETS. IT NEEDS TO BE IMPROVED~~
-~~add ability to view internet speed before reservation~~
-~~automate vastai keygen~~
-STARTUP TIME IS SLOW. AN ALTERNATIVE TO HUGGING FACE WOULD PROBABLY BE BEST? 
-
-
 ROADMAP 
 
 
@@ -45,9 +27,15 @@ THE THINGS I REALLY WANT ARE ....
 
 0) an easy way to launch open source LLM's on vast ai  ~~codellama~~
 
+0.3) an easy way to duplicate ur local env/data onto a vastai instance
+
 0.5) an easy way to fine tune open source LLM's 
 
+0.7) fault tollerant training 
+
 1) a cli that will let me specify when a vast instance will startup, as well as what data it will sync - without writing any sh scripts or installing any linux packages 
+
 2) a python library that will sync my models, and code with the vast instance, and startup and resume a training run when/if the vast instance fails (on another instance) 
+
 3) the library will also let me pause runs and effortlessly resume them, without any programatic code changes, as well as schedule pauses with shutdowns  
 4) alerts for various events that occur on training run (accuracy accomplishments and failures), to my email 
