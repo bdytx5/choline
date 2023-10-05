@@ -1,5 +1,6 @@
 # 🍳🍳🍳choline🍳🍳🍳
 
+https://upload.wikimedia.org/wikipedia/commons/2/2e/Choline_cation.png
 
 A ml library thingy 
 
