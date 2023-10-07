@@ -43,14 +43,14 @@ def send_alert(message):
 
 
 
-def read_cholineignore():
-    ignore_patterns = []
-    try:
-        with open('./.cholineignore', 'r') as f:
-            ignore_patterns = [line.strip() for line in f if line.strip() and not line.startswith("#")]
-    except FileNotFoundError:
-        pass
-    return ignore_patterns
+# def read_cholineignore():
+#     ignore_patterns = []
+#     try:
+#         with open('./.cholineignore', 'r') as f:
+#             ignore_patterns = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+#     except FileNotFoundError:
+#         pass
+#     return ignore_patterns
 
 
 def should_ignore(path, ignore_patterns):
@@ -69,8 +69,24 @@ def get_ssh_details(vastai_id):
     return username, host, port
 
 
-def ssh_copy_directory(scp, ssh, local_path, remote_base_path):
-    ignore_patterns = read_cholineignore()
+# def ssh_copy_directory(scp, ssh, local_path, remote_base_path):
+#     ignore_patterns = read_cholineignore()
+#     cwd = os.getcwd()
+#     for root, dirs, files in os.walk(local_path):
+#         for file_name in files:
+#             local_file = os.path.join(root, file_name)
+#             relative_path = os.path.relpath(local_file, cwd)
+#             if should_ignore(relative_path, ignore_patterns):
+#                 continue
+#             remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
+#             remote_dir = os.path.dirname(remote_file)
+            
+#             stdin, stdout, stderr = ssh.exec_command(f"mkdir -p {remote_dir}")
+#             stdout.read()
+#             scp.put(local_file, remote_file)
+
+
+def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns):
     cwd = os.getcwd()
     for root, dirs, files in os.walk(local_path):
         for file_name in files:
@@ -87,19 +103,36 @@ def ssh_copy_directory(scp, ssh, local_path, remote_base_path):
 
 
 
-def ssh_copy(username, host, port, src, dest):
+# def ssh_copy(username, host, port, src, dest):
+#     client = paramiko.SSHClient()
+#     client.load_system_host_keys()
+#     client.set_missing_host_key_policy(paramiko.WarningPolicy)
+#     client.connect(host, port=port, username=username)
+#     with SCPClient(client.get_transport()) as scp:
+#         if os.path.isdir(src):
+#             ssh_copy_directory(scp, client, src, dest)
+#         else:
+#             relative_path = os.path.relpath(src, os.getcwd())
+#             remote_file = os.path.join(dest, relative_path)
+#             scp.put(src, remote_file)
+#     client.close()
+
+
+
+def ssh_copy(username, host, port, src, dest, ignore_patterns):
     client = paramiko.SSHClient()
     client.load_system_host_keys()
     client.set_missing_host_key_policy(paramiko.WarningPolicy)
     client.connect(host, port=port, username=username)
     with SCPClient(client.get_transport()) as scp:
         if os.path.isdir(src):
-            ssh_copy_directory(scp, client, src, dest)
+            ssh_copy_directory(scp, client, src, dest, ignore_patterns)
         else:
             relative_path = os.path.relpath(src, os.getcwd())
             remote_file = os.path.join(dest, relative_path)
             scp.put(src, remote_file)
     client.close()
+
 
 
 def check_for_choline_txt(vastai_id):
@@ -113,23 +146,6 @@ def check_for_choline_txt(vastai_id):
     print(f"Detected Operational Machine {vastai_id}.")
     return True
 
-
-# def send_choline_setup(vastai_id, max_retries=100):
-#     # needs to read the setup script from choline.yaml and write it to .choline/choline_setup.sh then send it 
-#     username, host, port = get_ssh_details(vastai_id)
-#     current_path = os.getcwd()
-#     local_path = os.path.join(current_path, '.choline')
-#     remote_path = '/root'
-#     retries = 0
-#     while retries < max_retries:
-#         try:
-#             ssh_copy(username, host, port, local_path, remote_path)
-#             print("Sent setup script")
-#             break
-#         except Exception as e:
-#             print(f"Failed to send choline_setup: {e}. Waiting 5 seconds before retrying.")
-#             time.sleep(5)
-#             retries += 1
 
 
 def send_choline_setup(vastai_id, max_retries=100):
@@ -158,8 +174,8 @@ def send_choline_setup(vastai_id, max_retries=100):
             time.sleep(20)
             retries += 1
 
-            
-def send_upload_locations(vastai_id, upload_locations, max_retries=100):
+
+def send_upload_locations(vastai_id, upload_locations, ignore_patterns, max_retries=100):
     username, host, port = get_ssh_details(vastai_id)
     current_path = os.getcwd()
     remote_path = '/root'
@@ -168,7 +184,7 @@ def send_upload_locations(vastai_id, upload_locations, max_retries=100):
         local_path = os.path.join(current_path, location)
         while retries < max_retries:
             try:
-                ssh_copy(username, host, port, local_path, remote_path)
+                ssh_copy(username, host, port, local_path, remote_path, ignore_patterns)
                 print(f"Sent location {local_path}")
                 break
             except Exception as e:
@@ -176,37 +192,25 @@ def send_upload_locations(vastai_id, upload_locations, max_retries=100):
                 time.sleep(20)
                 retries += 1
 
-    complete_file = os.path.join(current_path, '.choline/choline_complete.txt')
-    with open(complete_file, 'w') as f:
-        f.write('0')
-
-    retries = 0
-    while retries < max_retries:
-        try:
-            ssh_copy(username, host, port, complete_file, remote_path)
-            print("Data sync complete")
-            break
-        except Exception as e:
-            print(f"Failed to send data sync completion indicator to machine: {e}. Waiting 20 seconds before retrying.")
-            time.sleep(20)
-            retries += 1
 
 def main(vastai_id, max_checks):
+    choline_data = get_choline_yaml_data()
+    ignore_patterns = choline_data.get('ignore', [])
+    upload_locations = choline_data.get('upload_locations', [])
+    
     checks = 0
-    ignore_patterns = read_cholineignore()
+
     print("waiting 25 seconds for machine startup...")
     time.sleep(25)
-    
+
     while checks < max_checks:
         try:
             if check_for_choline_txt(vastai_id): # signifys machine is operational 
-                choline_data = get_choline_yaml_data()
-                upload_locations = choline_data.get('upload_locations', [])
-                print("Sending Setup Script")
-                send_choline_setup(vastai_id) # for setting up the instance 
                 print("Sending Upload Locations")
-                send_upload_locations(vastai_id, upload_locations) # transer required data 
+                send_upload_locations(vastai_id, upload_locations, ignore_patterns) # transer required data 
+                print("Data sync complete")
                 return
+            
             print("waiting to try again")
             time.sleep(6)
             checks += 1
@@ -214,14 +218,15 @@ def main(vastai_id, max_checks):
             import traceback
             print("Error setting up machine. This may not be severe, and we will retry momentarily")
             traceback.print_exc()
+
+            if checks >= max_checks:
+                print("failed to setup machine. We reccomend you try to launch a different machine, as this is likely an issue with the machine")
+                send_alert(f"Instance {vastai_id} has failed to start up.")
+
+
             print("trying again in 5 seconds")
             time.sleep(5)
             continue
-    
-    if checks >= max_checks:
-        print("failed to setup machine. We reccomend you try to launch a different machine, as this is likely an issue with the machine")
-        send_alert(f"Instance {vastai_id} has failed to start up.")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Monitor VastAI instance for startup completion.")
@@ -230,6 +235,26 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(args.id, args.max_checks)
 
+
+
+
+
+# def send_choline_setup(vastai_id, max_retries=100):
+#     # needs to read the setup script from choline.yaml and write it to .choline/choline_setup.sh then send it 
+#     username, host, port = get_ssh_details(vastai_id)
+#     current_path = os.getcwd()
+#     local_path = os.path.join(current_path, '.choline')
+#     remote_path = '/root'
+#     retries = 0
+#     while retries < max_retries:
+#         try:
+#             ssh_copy(username, host, port, local_path, remote_path)
+#             print("Sent setup script")
+#             break
+#         except Exception as e:
+#             print(f"Failed to send choline_setup: {e}. Waiting 5 seconds before retrying.")
+#             time.sleep(5)
+#             retries += 1
 
 
 

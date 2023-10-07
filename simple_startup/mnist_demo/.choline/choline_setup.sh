@@ -14,10 +14,9 @@
 sudo apt upgrade
 sudo apt install vim -y
 sudo apt install python3 -y
-#sudo apt install pip3 -y
 sudo apt install python3-pip -y
 # Set Wandb API key without user interaction
-export WANDB_API_KEY=123
+export WANDB_API_KEY=20
 pip install absl-py==1.4.0 || pip3 install absl-py==1.4.0 -y
 pip install accelerate==0.23.0 || pip3 install accelerate==0.23.0 -y
 pip install aiohttp==3.8.5 || pip3 install aiohttp==3.8.5 -y
@@ -397,4 +396,4 @@ pip install youtube-dl @ git+https://github.com/ytdl-org/youtube-dl.git@66ab0814
 pip install zope.interface==6.0 || pip3 install zope.interface==6.0 -y
 pip install zstandard @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_41b3vxtask/croot/zstandard_1677013668452/work || pip3 install zstandard @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_41b3vxtask/croot/zstandard_1677013668452/work -y
 pip install  || pip3 install  -y
-python3 tr_script.py
+idk
