@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-
+import os
 
 
 #### opening local file 
@@ -15,11 +15,56 @@ from torch.utils.data import DataLoader
 
 ####### could just go through all files 
 ############ check if a path is in external upload paths list  
-######### if outside, replace base path with /root/ 
+######### if outside, replace base (/Users/brettyoung/Desktop/dev/choline/simple_startup/) path with /root/ 
 
-with open('/Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_file.txt', 'r') as f:
+# yaml contains 
+# upload_locations:
+# - /Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo
+# - /Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_file.txt
+# - /Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_data_folder/1
+# - /Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_data_folder/
+
+
+
+import os
+
+
+# temporary solution until i connect the right neurons 
+def cholinePath(local_path, remote_path):
+    is_remote = os.environ.get('cholineremote')
+    if is_remote:
+        return remote_path
+    else:
+        return local_path
+
+
+with open(cholinePath('/Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_file.txt', 'root/mnist_demo_external_file.txt'), 'r') as f:
     content = f.read()
     print(content)
+
+#### several cases 
+
+######## individual files that match those listed in the yaml --> just replace base path with /root/ 
+
+###### folders that match one listed in yaml ---> just replace all with root 
+
+
+
+# above would be 
+
+# with open('root/mnist_demo_external_file.txt', 'r') as f:
+#     content = f.read()
+#     print(content)
+
+
+
+# above would be 
+##### 
+
+# directory_path = "root/mnist_demo_external_data_folder/"
+
+
+## ......
 
 
 

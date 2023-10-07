@@ -77,6 +77,30 @@ def get_ssh_details(vastai_id):
 
 
 
+# def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns, username, host, port):
+#     cwd = os.getcwd()
+#     for root, dirs, files in os.walk(local_path):
+#         for file_name in files:
+#             local_file = os.path.join(root, file_name)
+#             relative_path = os.path.relpath(local_file, cwd)
+            
+#             if should_ignore(relative_path, ignore_patterns):
+#                 continue
+            
+#             # Store the file's timestamp before uploading
+#             store_file_timestamp(local_file, username, host, port)
+            
+#             remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
+#             remote_dir = os.path.dirname(remote_file)
+            
+#             stdin, stdout, stderr = ssh.exec_command(f"mkdir -p {remote_dir}")
+#             stdout.read()
+#             print("local = {} remote destin = {}".format(local_file, remote_file))
+#             scp.put(local_file, remote_file)
+
+
+import re
+
 def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns, username, host, port):
     cwd = os.getcwd()
     for root, dirs, files in os.walk(local_path):
@@ -91,12 +115,13 @@ def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns, 
             store_file_timestamp(local_file, username, host, port)
             
             remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
+            remote_file = re.sub(r'(\.\./)+', '', remote_file)  # Replace any sequence of ../ with /root/
             remote_dir = os.path.dirname(remote_file)
             
             stdin, stdout, stderr = ssh.exec_command(f"mkdir -p {remote_dir}")
             stdout.read()
+            print("local = {} remote destin = {}".format(local_file, remote_file))
             scp.put(local_file, remote_file)
-
 
 
 

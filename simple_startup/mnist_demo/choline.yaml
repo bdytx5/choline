@@ -12,6 +12,7 @@ python_version: 3.10.10
 upload_locations:
 - /Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo
 - /Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_file.txt
+- /Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_data_folder
 setup_script: |
   #!/bin/bash
   # Download Miniconda installer

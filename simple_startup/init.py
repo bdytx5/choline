@@ -115,6 +115,7 @@ def create_setup_script(wndb_key, on_start_cmd):
 # Activate environment
 # conda activate choline
 # Install vim
+export cholineremote=true
 sudo apt upgrade
 sudo apt install vim -y
 sudo apt install python3 -y
