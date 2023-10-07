@@ -42,15 +42,22 @@ def send_alert(message):
         os.system(f'echo "{message}" | wall')
 
 
-
-# def read_cholineignore():
-#     ignore_patterns = []
-#     try:
-#         with open('./.cholineignore', 'r') as f:
-#             ignore_patterns = [line.strip() for line in f if line.strip() and not line.startswith("#")]
-#     except FileNotFoundError:
-#         pass
-#     return ignore_patterns
+##### for checking diffs between last run 
+def store_file_timestamp(file_path, username, host, port, choline_dir=".choline"):
+    timestamp_json_filename = f"file_timestamps_{username}_{host}_{port}.json"
+    timestamp_json_path = os.path.join(choline_dir, timestamp_json_filename)
+    last_modified_time = os.path.getmtime(file_path)
+    
+    if os.path.exists(timestamp_json_path):
+        with open(timestamp_json_path, "r") as f:
+            file_data = json.load(f)
+    else:
+        file_data = {}
+    
+    file_data[file_path] = last_modified_time
+    
+    with open(timestamp_json_path, "w") as f:
+        json.dump(file_data, f)
 
 
 def should_ignore(path, ignore_patterns):
@@ -69,31 +76,20 @@ def get_ssh_details(vastai_id):
     return username, host, port
 
 
-# def ssh_copy_directory(scp, ssh, local_path, remote_base_path):
-#     ignore_patterns = read_cholineignore()
-#     cwd = os.getcwd()
-#     for root, dirs, files in os.walk(local_path):
-#         for file_name in files:
-#             local_file = os.path.join(root, file_name)
-#             relative_path = os.path.relpath(local_file, cwd)
-#             if should_ignore(relative_path, ignore_patterns):
-#                 continue
-#             remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
-#             remote_dir = os.path.dirname(remote_file)
-            
-#             stdin, stdout, stderr = ssh.exec_command(f"mkdir -p {remote_dir}")
-#             stdout.read()
-#             scp.put(local_file, remote_file)
 
-
-def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns):
+def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns, username, host, port):
     cwd = os.getcwd()
     for root, dirs, files in os.walk(local_path):
         for file_name in files:
             local_file = os.path.join(root, file_name)
             relative_path = os.path.relpath(local_file, cwd)
+            
             if should_ignore(relative_path, ignore_patterns):
                 continue
+            
+            # Store the file's timestamp before uploading
+            store_file_timestamp(local_file, username, host, port)
+            
             remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
             remote_dir = os.path.dirname(remote_file)
             
@@ -101,21 +97,6 @@ def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns):
             stdout.read()
             scp.put(local_file, remote_file)
 
-
-
-# def ssh_copy(username, host, port, src, dest):
-#     client = paramiko.SSHClient()
-#     client.load_system_host_keys()
-#     client.set_missing_host_key_policy(paramiko.WarningPolicy)
-#     client.connect(host, port=port, username=username)
-#     with SCPClient(client.get_transport()) as scp:
-#         if os.path.isdir(src):
-#             ssh_copy_directory(scp, client, src, dest)
-#         else:
-#             relative_path = os.path.relpath(src, os.getcwd())
-#             remote_file = os.path.join(dest, relative_path)
-#             scp.put(src, remote_file)
-#     client.close()
 
 
 
@@ -126,13 +107,12 @@ def ssh_copy(username, host, port, src, dest, ignore_patterns):
     client.connect(host, port=port, username=username)
     with SCPClient(client.get_transport()) as scp:
         if os.path.isdir(src):
-            ssh_copy_directory(scp, client, src, dest, ignore_patterns)
+            ssh_copy_directory(scp, client, src, dest, ignore_patterns, username=username, host=host, port=port)
         else:
-            relative_path = os.path.relpath(src, os.getcwd())
-            remote_file = os.path.join(dest, relative_path)
+            store_file_timestamp(src, username, host, port)
+            remote_file = os.path.join(dest, os.path.basename(src))
             scp.put(src, remote_file)
     client.close()
-
 
 
 def check_for_choline_txt(vastai_id):
@@ -325,3 +305,69 @@ if __name__ == "__main__":
 # if __name__ == '__main__':
 #     unittest.main()
 
+
+# def ssh_copy_directory(scp, ssh, local_path, remote_base_path):
+#     ignore_patterns = read_cholineignore()
+#     cwd = os.getcwd()
+#     for root, dirs, files in os.walk(local_path):
+#         for file_name in files:
+#             local_file = os.path.join(root, file_name)
+#             relative_path = os.path.relpath(local_file, cwd)
+#             if should_ignore(relative_path, ignore_patterns):
+#                 continue
+#             remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
+#             remote_dir = os.path.dirname(remote_file)
+            
+#             stdin, stdout, stderr = ssh.exec_command(f"mkdir -p {remote_dir}")
+#             stdout.read()
+#             scp.put(local_file, remote_file)
+
+# def ssh_copy_directory(scp, ssh, local_path, remote_base_path, ignore_patterns):
+#     cwd = os.getcwd()
+#     for root, dirs, files in os.walk(local_path):
+#         for file_name in files:
+#             local_file = os.path.join(root, file_name)
+#             relative_path = os.path.relpath(local_file, cwd)
+#             if should_ignore(relative_path, ignore_patterns):
+#                 continue
+
+#             store_file_timestamp(local_file) #
+
+#             remote_file = os.path.join(remote_base_path, relative_path).replace('\\', '/')
+#             remote_dir = os.path.dirname(remote_file)
+            
+#             stdin, stdout, stderr = ssh.exec_command(f"mkdir -p {remote_dir}")
+#             stdout.read()
+#             scp.put(local_file, remote_file)
+
+
+
+# def ssh_copy(username, host, port, src, dest):
+#     client = paramiko.SSHClient()
+#     client.load_system_host_keys()
+#     client.set_missing_host_key_policy(paramiko.WarningPolicy)
+#     client.connect(host, port=port, username=username)
+#     with SCPClient(client.get_transport()) as scp:
+#         if os.path.isdir(src):
+#             ssh_copy_directory(scp, client, src, dest)
+#         else:
+#             relative_path = os.path.relpath(src, os.getcwd())
+#             remote_file = os.path.join(dest, relative_path)
+#             scp.put(src, remote_file)
+#     client.close()
+
+
+# def ssh_copy(username, host, port, src, dest, ignore_patterns):
+#     client = paramiko.SSHClient()
+#     client.load_system_host_keys()
+#     client.set_missing_host_key_policy(paramiko.WarningPolicy)
+#     client.connect(host, port=port, username=username)
+#     with SCPClient(client.get_transport()) as scp:
+#         if os.path.isdir(src):
+#             ssh_copy_directory(scp, client, src, dest, ignore_patterns, username=username, host=host,port=port)
+#         else:
+#             relative_path = os.path.relpath(src, os.getcwd())
+#             store_file_timestamp(src, username, host, port)
+#             remote_file = os.path.join(dest, relative_path)
+#             scp.put(src, remote_file)
+#     client.close()

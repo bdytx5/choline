@@ -4,6 +4,26 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
+
+
+#### opening local file 
+###### when synced, the file will go to /root/mnist_demo_external_file.txt 
+##### path will change on remote 
+
+###### eg we will need to replace the "/Users/brettyoung/Desktop/dev/choline/simple_startup/" with "/root/"
+
+
+####### could just go through all files 
+############ check if a path is in external upload paths list  
+######### if outside, replace base path with /root/ 
+
+with open('/Users/brettyoung/Desktop/dev/choline/simple_startup/mnist_demo_external_file.txt', 'r') as f:
+    content = f.read()
+    print(content)
+
+
+
+
 # Dataset
 transform = transforms.Compose([transforms.ToTensor()])
 train_dataset = datasets.MNIST(root='./data', train=True, transform=transform, download=True)
