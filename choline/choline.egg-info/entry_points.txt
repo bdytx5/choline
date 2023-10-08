@@ -1,0 +1,2 @@
+[console_scripts]
+choline = choline.choline:main
