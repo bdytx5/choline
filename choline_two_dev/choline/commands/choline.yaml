@@ -1,0 +1,53 @@
+conda_version: 23.7.2
+hardware_filters:
+  cpu_ram: '>10'
+  disk_space: '>20'
+  gpu_name: TESLA_P100
+ignore:
+- '*.md'
+- .dockerignore
+- .gitignore
+- '*.json'
+image: nvidia/cuda:12.0.0-devel-ubuntu20.04
+local_cuda_version: '12.0'
+onStart: idk
+python_version: 3.10.10
+upload_locations:
+- /Users/brettyoung/Desktop/helloCholine
+setup_script: |
+  #!/bin/bash
+
+  # Download and install ollama
+  sudo curl -L https://ollama.ai/download/ollama-linux-amd64 -o /usr/bin/ollama
+  sudo chmod +x /usr/bin/ollama
+
+  # Ensure no previous instance is running
+  sudo pkill -f 'ollama serve'
+  nohup /usr/bin/ollama serve > /var/log/ollama_serve.log 2>&1 &
+
+  # Give some time for ollama to start serving
+  # Wait for ollama serve to be ready
+  echo "Waiting for ollama serve to be ready..."
+  while ! grep -q "Nvidia GPU detected" /var/log/ollama_serve.log; do
+    sleep 5 # Check every 5 seconds
+  done
+  echo "ollama serve is ready."
+
+
+  # Start the pull operation in the background
+  /usr/bin/ollama pull mistral > /var/log/ollama_pull.log 2>&1 &
+
+  # Wait for the pull to complete successfully
+  echo "Waiting for ollama to pull the model..."
+  while ! grep -q "success" /var/log/ollama_pull.log; do
+    sleep 10 # Check every 10 seconds
+  done
+
+  echo "Model pull completed successfully."
+
+  # Optionally, run a model command if needed
+  # /usr/bin/ollama run mistral & # Assuming there's a command to run the model
+
+  echo "Setup complete. Check /var/log/ollama_pull.log for pull details."
+  git clone https://github.com/bdytx5/choline_templates.git
+  python3 choline_templates/api.py > ~/.choline/chat_api_out.txt 2>&1

@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Python: Train",
+        "type": "python",
+        "request": "launch",
+        "program": "/Users/brettyoung/Desktop/dev/choline/choline_dev/choline/choline_dbg.py",
+        "sudo": true,
+        "cwd": "/Users/brettyoung/Desktop/dev/choline/choline_dev/",
+        "env": {"PYTHONPATH": "/Users/brettyoung/Desktop/dev/choline/choline_dev/"}
+      },
+
+    ]
+  }
+  
