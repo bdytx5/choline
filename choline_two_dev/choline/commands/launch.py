@@ -413,7 +413,8 @@ def run_monitor_instance_script_vast(instance_id, max_checks=300):
 #     else:
 #         print("No suitable offers found.")
 
-def main(max_price=0, exclude_instances=[]):
+def mainf(max_price=0, exclude_instances=[]):
+    
     # choline_data = get_choline_json_data()
     choline_data = get_choline_yaml_data()
 
@@ -459,6 +460,7 @@ def main(max_price=0, exclude_instances=[]):
     choice = 0 
     print("mx price: {}".format(max_price))
     if offers:
+        print("found offers")
         res = 'y'
         if not max_price:
             print("Five cheapest offers:------")
@@ -486,10 +488,12 @@ def main(max_price=0, exclude_instances=[]):
             
             startup_res = run_monitor_instance_script_vast(instance_id=int(contract_id))
             if startup_res: 
-                yield int(instance_id)  # Yield instance_id here
+                yield str(instance_id)  + "_" + str(contract_id)  # Yield instance_id here
+                print(f"Instance creation request complete. Now setting up your instance with id {instance_id}. Run 'choline status 'instance id'' to check the logs for your setup.")
             else: 
-                yield -1 # eg failed startuo 
-            print(f"Instance creation request complete. Now setting up your instance with id {instance_id}. Run 'choline status 'instance id'' to check the logs for your setup.")
+                yield -1 # eg failed startuo =
+                print(f"Instance creation request failed.")
+                
         else:
             print("Operation canceled.")
             yield 0 # no offers found 
@@ -497,7 +501,7 @@ def main(max_price=0, exclude_instances=[]):
         print("No suitable offers found.")
         yield 0 # no offers found 
 
-# def main(max_price=None, verbose=False):
+# def main_launch(max_price=None, verbose=False):
 #     choline_data = get_choline_yaml_data()
 
 #     hardware_filters = choline_data.get('hardware_filters', {})
@@ -567,8 +571,100 @@ def main(max_price=0, exclude_instances=[]):
 #             print("No suitable offers found.")
 
 
+
+
+def old_main():
+    # choline_data = get_choline_json_data()
+    choline_data = get_choline_yaml_data()
+
+    hardware_filters = choline_data.get('hardware_filters', {})
+    cpu_ram_str = hardware_filters.get('cpu_ram', '')
+    print("CP RAM {}".format(cpu_ram_str))
+    gpu_name = hardware_filters.get('gpu_name', '')
+    disk_space_str = hardware_filters.get('disk_space', '')
+    image = choline_data.get('image', 'python:3.8')
+    num_gpus = choline_data.get('num_gpus', '1')
+    print(num_gpus + "##########"*10)
+    startup_script_path = generate_vast_onstart_script()
+
+    read_setup_from_choline_yaml_and_write_sh_to_disk()
+
+    # Extract operator and value from the disk_space string
+    match = re.match(r"([<>!=]+)(\d+)", cpu_ram_str)
+    if match:
+        cpu_ram_operator, cpu_ram_value = match.groups()
+        cpu_ram_value = int(cpu_ram_value)
+    else:
+        print("Invalid disk_space string in JSON. Using default values.")
+        return 
+    # Extract operator and value from the disk_space string
+    match = re.match(r"([<>!=]+)(\d+)", disk_space_str)
+    if match:
+        disk_space_operator, disk_space_value = match.groups()
+        disk_space_value = int(disk_space_value)
+    else:
+        print("Invalid disk_space string in JSON. Using default values.")
+        return 
+
+    if gpu_name.lower() != 'any':
+        print("############"*10)
+        print("############"*10)
+        print("############"*10)
+        print("############"*10)
+        print("############"*10)
+        print("############"*10)
+        print("############"*10)
+        query = f"gpu_name={gpu_name} num_gpus>={num_gpus} disk_space {disk_space_operator} {disk_space_value} cpu_ram > {cpu_ram_value}"
+    else:
+        query = f"disk_space {disk_space_operator} {disk_space_value} cpu_ram > {cpu_ram_value}"
+
+    print("QUERY {}".format(query))
+    offers = search_offers(query)
+    exp_storage = disk_space_value
+
+    offers = sort_offers_by_custom_criteria(offers, expected_storage_gb=exp_storage, expected_runtime_hr=2)
+
+    if offers:
+        print("Five cheapest offers:------")
+        for i, offer in enumerate(offers[:20]):
+            pretty_print_offer(offer, i)
+            # print(offer)
+
+        choice = int(input("Select an offer by entering its number (1-5): ")) - 1
+        selected_offer = offers[choice]
+        pretty_print_offer(selected_offer, choice)
+
+        confirmation = input("Would you like to proceed? (y/n): ")
+        if confirmation.lower() == 'y':
+            instance_id = selected_offer["id"]
+            options = ["--image", image, "--disk", str(disk_space_value), "--onstart", startup_script_path, "--env", "-e TZ=PDT -e XNAME=XX4 -p 22:22 -p 5000:5000"]
+            contract_id = create_instance(instance_id, options)
+            print("############"*10)
+            print("############"*10)
+            print("############"*10)
+            print("############"*10)
+            print("############"*10)
+            print("############"*10)
+            print("############"*10)            
+            print(int(contract_id))
+            run_monitor_instance_script_vast(instance_id=int(contract_id))
+            print(f"Instance creation request complete. Now setting up your instance with id {instance_id}. Run 'choline status 'instance id'' to check the logs for your setup.")
+        else:
+            print("Operation canceled.")
+    else:
+        print("No suitable offers found.")
+
+def idk():
+    print('idk')
 # def bid(mx_price):
 #     main(max_price=mx_price)
 
-def run(mx_price):
-    main(mx_price)
+def run(mx_price=0):
+    # idk()
+    old_main()
+    # if mx_price:
+    #     main(mx_price)
+    # else:
+    # #     main_launch(verbose=True)
+    # print("Cholineeee")
+    # mainf(mx_price)
