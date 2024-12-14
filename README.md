@@ -63,4 +63,14 @@ THE THINGS I REALLY WANT ARE ....
 2) a python library that will sync my models, and code with the vast instance, and startup and resume a training run when/if the vast instance fails (on another instance) 
 
 3) the library will also let me pause runs and effortlessly resume them, without any programatic code changes, as well as schedule pauses with shutdowns  
-4) alerts for various events that occur on training run (accuracy accomplishments and failures), to my email 
+4) alerts for various events that occur on training run (accuracy accomplishments and failures), to my email
+
+
+
+
+
+
+problems 
+
+-- supplying req.txt with cuda installs totally ruins everything .... 
+-- for some reason the automatic git cloning isnt working anymore 
